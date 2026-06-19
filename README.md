@@ -22,6 +22,15 @@ La primera versió accepta CVs en PDF o DOCX, n'extreu el text i mostra un
 resum del perfil, competències, idiomes i punts clau. Els PDF escanejats sense
 text incorporat requeriran una futura capa d'OCR.
 
+Després de l'anàlisi també aplica el checklist de
+`backend/config/cv_checklist.json`: Free utilitza la prioritat màxima i PRO
+afegeix les prioritats alta i mitjana. Els camps no detectats es mostren com a
+preguntes editables per completar el perfil abans del matching.
+
+El pla PRO també rep una auditoria inicial definida a
+`backend/config/cv_improvement_checklist.json`, amb recomanacions sobre
+resultats quantificats, ATS, elevator pitch, verbs d'acció i futurs skill gaps.
+
 ## Portals disponibles
 
 - `/`: homepage amb selecció entre candidat i empresa.

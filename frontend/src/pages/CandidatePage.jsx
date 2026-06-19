@@ -4,6 +4,8 @@ import { Footer } from "../components/Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { analyzeCv } from "../services/api";
 import { BackButton } from "../components/BackButton";
+import { ProfileChecklist } from "../components/ProfileChecklist";
+import { CvImprovementAudit } from "../components/CvImprovementAudit";
 
 const copy = {
   es: { eyebrow:"PORTAL CANDIDATO",title:"Tu talento merece el match perfecto.",text:"Sube tu currículum y analizaremos tu experiencia, formación y competencias.",drop:"Selecciona o arrastra tu CV",formats:"PDF o DOCX · Máximo 10 MB",button:"Analizar mi CV",loading:"Leyendo el CV...",summary:"Esto es lo que hemos entendido",points:"Puntos clave",skills:"Competencias",languages:"Idiomas",preview:"Texto extraído",error:"Selecciona un PDF o DOCX válido." },
@@ -55,19 +57,27 @@ export function CandidatePage() {
         </form>
 
         {result && (
-          <section className="analysis-result">
-            <div className="analysis-result__main">
-              <span className="result-label">{t.summary}</span>
-              <h2>{result.summary}</h2>
-              <h3>{t.points}</h3>
-              <ul>{result.highlights.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <aside>
-              {!!result.skills.length && <><h3>{t.skills}</h3><div className="tags">{result.skills.map((item) => <span key={item}>{item}</span>)}</div></>}
-              {!!result.languages.length && <><h3>{t.languages}</h3><div className="tags">{result.languages.map((item) => <span key={item}>{item}</span>)}</div></>}
-              <details><summary>{t.preview}</summary><pre>{result.preview}</pre></details>
-            </aside>
-          </section>
+          <>
+            <section className="analysis-result">
+              <div className="analysis-result__main">
+                <span className="result-label">{t.summary}</span>
+                <h2>{result.summary}</h2>
+                <h3>{t.points}</h3>
+                <ul>{result.highlights.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+              <aside>
+                {!!result.skills.length && <><h3>{t.skills}</h3><div className="tags">{result.skills.map((item) => <span key={item}>{item}</span>)}</div></>}
+                {!!result.languages.length && <><h3>{t.languages}</h3><div className="tags">{result.languages.map((item) => <span key={item}>{item}</span>)}</div></>}
+                <details><summary>{t.preview}</summary><pre>{result.preview}</pre></details>
+              </aside>
+            </section>
+            {result.checklist && (
+              <ProfileChecklist checklist={result.checklist} language={language} />
+            )}
+            {result.cv_improvement && (
+              <CvImprovementAudit audit={result.cv_improvement} language={language} />
+            )}
+          </>
         )}
       </main>
       <Footer language={language} />

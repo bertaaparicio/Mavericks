@@ -10,8 +10,13 @@ Mavericks/
 ├── main.py                         # Punt d'entrada: arrenca el servidor
 ├── backend/
 │   ├── server.py                   # Rutes HTTP, fitxers estàtics i API
+│   ├── config/
+│   │   └── cv_checklist.json       # Camps, prioritats, plans i preguntes
+│   │   └── cv_improvement_checklist.json # Criteris de millora PRO
 │   └── services/
-│       └── cv_reader.py            # Extracció i anàlisi de PDF/DOCX
+│       ├── cv_reader.py            # Extracció i anàlisi de PDF/DOCX
+│       └── checklist_service.py     # Estat completat/dubtós/pendent
+│       └── cv_improvement_service.py # Auditoria i recomanacions del CV
 ├── frontend/                        # Aplicació React creada amb Vite
 │   ├── index.html                   # Document base on React es munta
 │   ├── package.json                 # Scripts i dependències Node
@@ -34,6 +39,27 @@ Mavericks/
 4. `backend/server.py` interpreta el formulari.
 5. `cv_reader.py` extreu el text i retorna dades estructurades.
 6. El frontend mostra el resum, punts clau i text detectat.
+7. El checklist mostra els camps detectats i recull les respostes pendents.
+
+## Checklist abans del matching
+
+`backend/config/cv_checklist.json` és la font de veritat. Cada camp defineix:
+
+- prioritat (`maximum`, `high` o `medium`);
+- plans als quals s'aplica;
+- si és obligatori;
+- pregunta en català, castellà i anglès.
+
+El servei no envia encara les preguntes a un LLM. Primer prova d'omplir-les amb
+heurístiques del lector. Els valors segurs queden `completed`, les inferències
+amb baixa confiança queden `uncertain` i la resta `missing`.
+
+## Auditoria de millora PRO
+
+`backend/config/cv_improvement_checklist.json` manté separats els criteris de
+qualitat del CV. L'auditoria comprova resultats quantificats, ATS, elevator
+pitch i verbs d'acció. La comparació de skill gaps queda explícitament pendent
+de connectar dades d'ofertes reals; el sistema no inventa competències de mercat.
 
 ## Flux d'empresa
 

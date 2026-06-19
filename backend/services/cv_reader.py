@@ -16,6 +16,9 @@ from pathlib import Path
 from docx import Document
 from pypdf import PdfReader
 
+from backend.services.checklist_service import build_checklist
+from backend.services.cv_improvement_service import evaluate_cv_improvements
+
 
 MAX_FILE_SIZE = 10 * 1024 * 1024
 ALLOWED_EXTENSIONS = {".pdf", ".docx"}
@@ -57,6 +60,25 @@ STOPWORDS = {
     "professional", "experiencia", "experiència", "experience", "formació",
     "formación", "education", "curriculum", "vitae",
 }
+
+SOFT_SKILLS = (
+    "Comunicació", "Lideratge", "Treball en equip", "Comunicación", "Liderazgo",
+    "Trabajo en equipo", "Communication", "Leadership", "Teamwork",
+    "Resolució de problemes", "Resolución de problemas", "Problem solving",
+    "Creativitat", "Creatividad", "Creativity", "Organització", "Organización",
+    "Organization", "Adaptabilitat", "Adaptabilidad", "Adaptability",
+)
+
+CERTIFICATION_MARKERS = (
+    "certificació", "certificación", "certification", "certificat", "certificado",
+    "certificate", "acreditació", "acreditación", "accreditation",
+)
+
+LANGUAGE_LEVEL_PATTERN = re.compile(
+    r"\b(A1|A2|B1|B2|C1|C2|bàsic|básico|basic|intermedi|intermedio|intermediate|"
+    r"avançat|avanzado|advanced|nadiu|nativo|native|professional|fluent)\b",
+    re.I,
+)
 
 TEXTS = {
     "ca": {
@@ -222,6 +244,25 @@ def analyse_cv(filename: str, content: bytes, language: str = "ca") -> dict:
     candidate_name = _guess_name(lines)
     profile_sentence = _profile_summary(candidate_name, skills, education, dated_lines, labels)
     keywords = _top_keywords(text, limit=8)
+    extracted_profile = _build_extracted_profile(
+        text=text,
+        lines=lines,
+        candidate_name=candidate_name,
+        emails=emails,
+        phones=phones,
+        links=links,
+        skills=skills,
+        languages=languages,
+        education=education,
+        dated_lines=dated_lines,
+    )
+    checklist = build_checklist(extracted_profile, language)
+    cv_improvement = evaluate_cv_improvements(
+        text=text,
+        lines=lines,
+        sections=sections,
+        language=language,
+    )
 
     return {
         "filename": filename,
@@ -240,6 +281,8 @@ def analyse_cv(filename: str, content: bytes, language: str = "ca") -> dict:
         },
         "metadata": metadata,
         "preview": text[:1200],
+        "checklist": checklist,
+        "cv_improvement": cv_improvement,
     }
 
 
@@ -265,6 +308,121 @@ def _guess_name(lines: list[str]) -> str:
         ):
             return line.title() if line.isupper() else line
     return ""
+
+
+def _build_extracted_profile(
+    *,
+    text: str,
+    lines: list[str],
+    candidate_name: str,
+    emails: list[str],
+    phones: list[str],
+    links: list[str],
+    skills: list[str],
+    languages: list[str],
+    education: list[str],
+    dated_lines: list[str],
+) -> dict[str, dict]:
+    """Transforma heurístiques del lector en camps normalitzats del checklist.
+
+    Els valors amb confiança baixa queden com ``uncertain``. En el futur,
+    l'agent LLM podrà substituir aquestes heurístiques sense canviar el JSON.
+    """
+
+    profile: dict[str, dict] = {}
+
+    def add(key: str, value, confidence: float, source: str = "cv") -> None:
+        if value not in (None, "", []):
+            profile[key] = {
+                "value": value,
+                "confidence": confidence,
+                "source": source,
+            }
+
+    add("identity.full_name", candidate_name, 0.86)
+    add("identity.email", emails[0] if emails else None, 0.99)
+    add("identity.phone", phones[0] if phones else None, 0.94)
+    professional_links = [
+        link for link in links
+        if "linkedin" in link.lower() or "portfolio" in link.lower() or "github" in link.lower()
+    ]
+    add(
+        "identity.linkedin_or_portfolio",
+        professional_links[0] if professional_links else (links[0] if links else None),
+        0.92,
+    )
+
+    role = _guess_primary_role(lines, candidate_name)
+    add("professional_profile.primary_role", role, 0.58)
+    years = _estimate_experience_years(dated_lines)
+    add("professional_profile.years_experience", years, 0.62)
+    add(
+        "professional_profile.main_responsibilities",
+        dated_lines[:3] if dated_lines else None,
+        0.56,
+    )
+
+    add("skills.technical_skills", skills, 0.88)
+    add("skills.tools", skills, 0.78)
+    soft_skills = [skill for skill in SOFT_SKILLS if _contains_term(text, skill)]
+    add("skills.soft_skills", _unique(soft_skills), 0.84)
+    certifications = _matching_lines(lines, CERTIFICATION_MARKERS, limit=5)
+    add("skills.certifications", certifications, 0.83)
+
+    add("education.degrees", education, 0.85)
+    add("education.highest_level", education[0] if education else None, 0.55)
+    education_dates = [
+        line for line in education
+        if re.search(r"\b(?:19|20)\d{2}\b", line)
+    ]
+    add("education.graduation_date", education_dates[0] if education_dates else None, 0.55)
+
+    add("languages.languages", languages, 0.88)
+    language_levels = _extract_language_levels(lines, languages)
+    add("languages.language_levels", language_levels, 0.72)
+
+    return profile
+
+
+def _guess_primary_role(lines: list[str], candidate_name: str) -> str:
+    """Busca una línia breu de titular professional prop de l'inici del CV."""
+
+    excluded = {
+        candidate_name.casefold(), "experiència", "experiencia", "experience",
+        "formació", "formación", "education", "idiomes", "idiomas", "languages",
+    }
+    for line in lines[:12]:
+        normalized = line.casefold()
+        if (
+            normalized not in excluded
+            and 2 <= len(line.split()) <= 12
+            and len(line) < 100
+            and not re.search(r"@|https?://|www\.|\+?\d[\d\s.-]{7,}", line, re.I)
+        ):
+            return line
+    return ""
+
+
+def _estimate_experience_years(dated_lines: list[str]) -> int | None:
+    """Estima l'experiència entre el primer i l'últim any detectats."""
+
+    years = [
+        int(year)
+        for line in dated_lines
+        for year in re.findall(r"\b(?:19|20)\d{2}\b", line)
+    ]
+    if len(years) < 2:
+        return None
+    return max(0, min(max(years) - min(years), 50))
+
+
+def _extract_language_levels(lines: list[str], languages: list[str]) -> list[str]:
+    results = []
+    for line in lines:
+        if any(_contains_term(line, language) for language in languages):
+            if LANGUAGE_LEVEL_PATTERN.search(line):
+                results.append(line)
+    return _unique(results)
 
 
 def _profile_summary(
