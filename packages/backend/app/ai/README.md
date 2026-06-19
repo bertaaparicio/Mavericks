@@ -1,22 +1,18 @@
 # AI Module
 
-Reusable helpers for querying a local Ollama model from backend endpoints.
+Reusable helpers for querying a local Ollama model
 
-## Configuration
-
-The client reads only the model name from the environment:
+## Model Configuration
 
 ```bash
 OLLAMA_MODEL=gpt-oss:20b
 ```
 
-Other settings are intentionally fixed to local defaults:
+## Defaults
 
 - host: `http://localhost:11434`
 - timeout: `60`
 - keep alive: `5m`
-
-If `OLLAMA_MODEL` is not set, the module uses `gpt-oss:20b`.
 
 Make sure Ollama is running and the model is available:
 
@@ -25,7 +21,7 @@ ollama serve
 ollama pull gpt-oss:20b
 ```
 
-## Chat Usage
+## Usage
 
 ```python
 from app.ai import ChatMessage, ChatRequest, OllamaModelClient
@@ -45,7 +41,7 @@ async def ask_model(question: str) -> str:
     return response.content
 ```
 
-## Generate Usage
+## Generate
 
 Use `generate` for a single prompt without chat history.
 
