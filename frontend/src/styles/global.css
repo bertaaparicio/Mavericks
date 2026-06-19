@@ -218,13 +218,111 @@ img { display: block; max-width: 100%; }
 .company-form input,.company-form textarea { padding: 12px; border: 1px solid var(--line); border-radius: 9px; resize: vertical; }
 .pricing-main {
   width: min(1080px, calc(100% - 40px));
-  min-height: calc(100vh - 220px);
   margin: 0 auto;
   padding: 65px 0 100px;
 }
+.pricing-hero { max-width: 820px; margin: 12px auto 54px; text-align: center; }
+.pricing-hero > span { color: var(--purple); font-size: 12px; font-weight: 900; letter-spacing: 1.5px; }
+.pricing-hero h1 { margin: 12px 0 20px; font-family: "Manrope",sans-serif; font-size: clamp(43px,5.5vw,68px); line-height: 1.06; letter-spacing: -3px; }
+.pricing-hero p { max-width: 720px; margin: 0 auto; color: var(--muted); font-size: 18px; line-height: 1.7; }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; max-width: 940px; margin: 0 auto; align-items: stretch; }
+.pricing-card { position: relative; display: flex; min-height: 610px; flex-direction: column; padding: 34px; border: 1px solid var(--line); border-radius: 25px; background: #fff; box-shadow: 0 18px 50px rgba(0,0,0,.07); }
+.pricing-card--featured { border: 2px solid var(--purple); box-shadow: 0 24px 65px rgba(161,0,255,.15); }
+.pricing-card__badge { position: absolute; top: 20px; right: 22px; padding: 7px 10px; color: #fff; border-radius: 999px; background: var(--purple); font-size: 10px; font-weight: 900; letter-spacing: .9px; }
+.pricing-card__heading h2 { margin: 0 0 9px; font-family: "Manrope",sans-serif; font-size: 29px; }
+.pricing-card__heading p { min-height: 50px; margin: 0; color: var(--muted); line-height: 1.55; }
+.pricing-card__price { display: flex; align-items: baseline; gap: 9px; margin: 30px 0; }
+.pricing-card__price strong { font-family: "Manrope",sans-serif; font-size: 49px; letter-spacing: -2px; }
+.pricing-card__price span { color: #737373; font-size: 13px; }
+.pricing-card ul { display: grid; gap: 15px; margin: 0 0 32px; padding: 0; color: #444; list-style: none; }
+.pricing-card li { position: relative; padding-left: 27px; line-height: 1.5; }
+.pricing-card li::before { position: absolute; left: 0; color: var(--purple); content: "✓"; font-weight: 900; }
+.pricing-card .button { width: 100%; margin-top: auto; }
+.pricing-card > small { margin-top: 13px; color: #777; text-align: center; }
+.pricing-explanation { max-width: 800px; margin: 72px auto; text-align: center; }
+.pricing-explanation h2 { margin: 0 0 13px; font-family: "Manrope",sans-serif; font-size: 34px; letter-spacing: -1px; }
+.pricing-explanation p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.7; }
+.pricing-ethics { padding: 44px; border-radius: 26px; background: #080808; color: #fff; }
+.pricing-ethics__intro { max-width: 760px; }
+.pricing-ethics__intro > span { color: #d17aff; font-size: 12px; font-weight: 900; letter-spacing: 1.3px; }
+.pricing-ethics__intro h2 { margin: 10px 0 14px; font-family: "Manrope",sans-serif; font-size: 35px; letter-spacing: -1.2px; }
+.pricing-ethics__intro p { margin: 0; color: #c9c9c9; line-height: 1.7; }
+.pricing-ethics__points { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 35px; }
+.pricing-ethics__points article { padding: 20px; border: 1px solid #292929; border-radius: 16px; background: #111; }
+.pricing-ethics__points strong { color: #d17aff; font-size: 12px; }
+.pricing-ethics__points h3 { margin: 10px 0 7px; font-family: "Manrope",sans-serif; }
+.pricing-ethics__points p { margin: 0; color: #aaa; font-size: 13px; line-height: 1.55; }
+.login-main {
+  width: min(1100px, calc(100% - 40px));
+  min-height: calc(100vh - 180px);
+  margin: 0 auto;
+  padding: 50px 0 90px;
+}
+.login-layout {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  max-width: 970px;
+  min-height: 650px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #dedede;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(0,0,0,.1);
+}
+.login-aside {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 42px;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(150deg, #b52aff, #7100bd);
+  transition: background .25s ease;
+}
+.login-aside--company { background: linear-gradient(150deg, #262626, #000); }
+.login-aside__eyebrow { font-size: 11px; font-weight: 900; letter-spacing: 1.3px; text-transform: uppercase; }
+.login-aside h2 { margin: 16px 0 10px; font-family: "Manrope",sans-serif; font-size: 36px; }
+.login-aside p { position: relative; z-index: 2; margin: 0; color: rgba(255,255,255,.82); line-height: 1.65; }
+.login-aside__visual {
+  position: absolute;
+  right: -38px;
+  bottom: -30px;
+  width: 115%;
+  height: 62%;
+  opacity: .42;
+  mix-blend-mode: screen;
+}
+.login-aside__visual img { width: 100%; height: 100%; object-fit: contain; }
+.login-panel { padding: 48px 52px; }
+.login-heading > span { color: var(--purple); font-size: 11px; font-weight: 900; letter-spacing: 1.4px; }
+.login-heading h1 { margin: 10px 0 12px; font-family: "Manrope",sans-serif; font-size: 38px; line-height: 1.15; letter-spacing: -1.6px; }
+.login-heading p { margin: 0; color: var(--muted); line-height: 1.6; }
+.account-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 27px 0; padding: 5px; border-radius: 12px; background: var(--concrete); }
+.account-switch button { padding: 10px; cursor: pointer; color: #666; border: 0; border-radius: 9px; background: transparent; font-weight: 800; }
+.account-switch button.is-active { color: var(--purple); background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.login-form { display: grid; gap: 17px; }
+.login-form > label { display: grid; gap: 7px; color: #333; font-size: 13px; font-weight: 800; }
+.login-form input { width: 100%; padding: 13px 14px; border: 1px solid #d8d8d8; border-radius: 10px; outline: none; background: #fff; }
+.login-form input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(161,0,255,.1); }
+.password-field { position: relative; }
+.password-field input { padding-right: 75px; }
+.password-field button { position: absolute; top: 50%; right: 7px; padding: 7px 9px; cursor: pointer; color: var(--purple); border: 0; border-radius: 7px; background: transparent; font-size: 12px; font-weight: 800; transform: translateY(-50%); }
+.login-options { display: flex; align-items: center; justify-content: space-between; gap: 15px; font-size: 12px; }
+.remember-control { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.remember-control input { width: auto; accent-color: var(--purple); }
+.login-options a,.login-register a { color: var(--purple); font-weight: 800; }
+.login-submit { width: 100%; margin-top: 3px; }
+.login-submit:disabled { cursor: wait; opacity: .7; }
+.login-message { margin: 0; padding: 11px; border-radius: 9px; font-size: 12px; line-height: 1.5; }
+.login-message--error { color: #a51d24; background: #fff0f1; }
+.login-message--success { color: #5e008e; background: #f7eaff; }
+.login-register { margin: 23px 0 10px; color: #666; text-align: center; font-size: 13px; }
+.login-privacy { display: block; color: #909090; text-align: center; }
 
 @media (max-width: 820px) {
-  .audiences__grid,.trust__grid,.analysis-result,.company-grid { grid-template-columns: 1fr; }
+  .audiences__grid,.trust__grid,.analysis-result,.company-grid,.pricing-grid,.pricing-ethics__points,.login-layout { grid-template-columns: 1fr; }
   .site-nav > a:not(.button) { display: none; }
   .audience-card { min-height: 690px; }
   .site-footer { grid-template-columns: 1fr; text-align: center; }
@@ -237,6 +335,11 @@ img { display: block; max-width: 100%; }
   .audience-card__scene { height: 315px; flex-basis: 315px; }
   .audience-card__content { margin-top: -72px; padding: 26px 22px 28px; }
   .site-footer nav { flex-wrap: wrap; }
+  .pricing-card { min-height: auto; padding: 27px; }
+  .pricing-ethics { padding: 28px; }
+  .login-aside { min-height: 260px; }
+  .login-aside__visual { width: 55%; height: 90%; }
+  .login-panel { padding: 35px 27px; }
 }
 
 /* Respeta la preferencia del sistema para reducir movimiento. */

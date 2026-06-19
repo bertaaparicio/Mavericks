@@ -17,7 +17,7 @@ export function Header({ language, portal }) {
       <nav className="site-nav" aria-label="Navegación principal">
         {!portal && <a href="#como-funciona">{t.how}</a>}
         <Link to="/pricing">{t.pricing}</Link>
-        {!portal && <a href="#login">{t.login}</a>}
+        {!portal && <Link to="/login">{t.login}</Link>}
         <LanguageSelector />
         {portal ? (
           <Link className="button button--outline" to="/">{t.switch}</Link>
