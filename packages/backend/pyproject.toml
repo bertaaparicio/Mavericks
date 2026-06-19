@@ -1,0 +1,11 @@
+[project]
+name = "server"
+version = "0.0.0"
+description = "TalentMatchAI"
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.27",
+    "langchain-text-splitters>=1.1",
+    "ollama>=0.6",
+    "PyPDF2>=3",
+]

@@ -1,3 +1,22 @@
+
+# python
 __pycache__/
 *.py[cod]
-.venv/
+*$py.class
+
+# mypy
+.mypy_cache/
+dmypy.json
+
+# misc
+tmp/
+.DS_Store
+*.pem
+
+# environments
+.env*
+!.env.template
+.env.*
+.venv
+env/
+venv/
