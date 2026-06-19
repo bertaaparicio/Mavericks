@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portal per a empreses i equips de selecció de TalentMatch AI.">
+  <title>TalentMatch AI | Portal Empresa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/company.css">
+</head>
+<body>
+  <!-- Navegació pròpia del portal empresa, però construïda amb components comuns. -->
+  <header class="tm-header">
+    <a class="tm-brand" href="/">
+      <span class="tm-brand__mark company-brand" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14M8 10h2M14 10h2M10 21v-4h4v4"/></svg>
+      </span>
+      <span class="tm-brand__name">TalentMatch <strong>AI</strong> <small>Empreses</small></span>
+    </a>
+    <nav class="tm-nav">
+      <a href="#ofertes" data-company-i18n="navJobs">Ofertes</a>
+      <a href="#formacio" data-company-i18n="navTraining">Formació</a>
+      <a href="#candidats" data-company-i18n="navCandidates">Candidats</a>
+      <div class="tm-nav__actions">
+        <select class="tm-language" id="company-language" aria-label="Idioma">
+          <option value="ca">CAT</option><option value="es">ES</option><option value="en">EN</option>
+        </select>
+        <a class="tm-button tm-button--ghost" href="/" data-company-i18n="switchProfile">Canviar perfil</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero orientat a la reducció de temps de contractació. -->
+    <section class="company-hero">
+      <div class="tm-container company-hero__grid">
+        <div>
+          <span class="company-eyebrow" data-company-i18n="eyebrow">CONTRACTACIÓ BASADA EN EVIDÈNCIES</span>
+          <h1 data-company-i18n="heroTitle">Publica oportunitats. Descobreix talent que encaixa de veritat.</h1>
+          <p data-company-i18n="heroText">Centralitza les teves vacants, cursos i processos de selecció. TalentMatch AI compara competències i explica cada recomanació.</p>
+          <div class="company-hero__actions">
+            <a class="tm-button tm-button--company" href="#nova-oferta" data-company-i18n="publishCta">Publicar una oferta</a>
+            <a class="tm-button tm-button--ghost" href="#formacio" data-company-i18n="courseCta">Crear un curs</a>
+          </div>
+        </div>
+        <div class="company-dashboard" aria-label="Vista prèvia del dashboard">
+          <div class="dashboard-head"><span data-company-i18n="dashboardTitle">Compatibilitat de candidats</span><strong>24</strong></div>
+          <div class="candidate-row"><span>AM</span><div><strong>Anna M.</strong><small>Python · SQL · Power BI</small></div><b>94%</b></div>
+          <div class="candidate-row"><span>JL</span><div><strong>Jordi L.</strong><small>Python · Tableau · Excel</small></div><b>88%</b></div>
+          <div class="candidate-row"><span>SK</span><div><strong>Sara K.</strong><small>Data · SQL · AWS</small></div><b>83%</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eines inicials del MVP empresarial. -->
+    <section class="company-tools" id="ofertes">
+      <div class="tm-container">
+        <div class="company-section-heading">
+          <div><span class="company-eyebrow" data-company-i18n="workspaceEyebrow">ESPAI DE TREBALL</span><h2 data-company-i18n="workspaceTitle">Què vols crear?</h2></div>
+          <p data-company-i18n="workspaceText">Comença publicant una vacant o una formació. En fases següents connectarem aquests continguts amb el motor de matching.</p>
+        </div>
+
+        <div class="tool-grid">
+          <article class="company-tool" id="nova-oferta">
+            <span class="company-tool__icon">💼</span>
+            <h3 data-company-i18n="jobTitle">Nova oferta de treball</h3>
+            <p data-company-i18n="jobText">Afegeix el rol, requisits imprescindibles, competències desitjables i condicions.</p>
+            <form class="company-form" id="job-form">
+              <label><span data-company-i18n="jobName">Nom de la posició</span><input name="title" required placeholder="Data Analyst"></label>
+              <label><span data-company-i18n="jobLocation">Localització</span><input name="location" required placeholder="Barcelona / Híbrid"></label>
+              <label><span data-company-i18n="jobDescription">Descripció i requisits</span><textarea name="description" rows="5" required placeholder="Responsabilitats, must-have, nice-to-have..."></textarea></label>
+              <label class="file-control"><span data-company-i18n="jobFile">O adjunta una oferta en PDF o DOCX</span><input type="file" accept=".pdf,.docx"></label>
+              <button class="tm-button tm-button--company" type="submit" data-company-i18n="saveJob">Desar oferta</button>
+              <p class="company-form__message" id="job-message" role="status"></p>
+            </form>
+          </article>
+
+          <article class="company-tool" id="formacio">
+            <span class="company-tool__icon">🎓</span>
+            <h3 data-company-i18n="trainingTitle">Nou curs o formació</h3>
+            <p data-company-i18n="trainingText">Ofereix formació als candidats per cobrir les competències que el mercat necessita.</p>
+            <form class="company-form" id="course-form">
+              <label><span data-company-i18n="courseName">Nom del curs</span><input name="title" required placeholder="Introducció a Power BI"></label>
+              <label><span data-company-i18n="courseMode">Modalitat</span><select name="mode"><option data-company-i18n="modeOnline">Online</option><option data-company-i18n="modeOnsite">Presencial</option><option data-company-i18n="modeHybrid">Híbrid</option></select></label>
+              <label><span data-company-i18n="courseSkills">Competències que desenvolupa</span><input name="skills" required placeholder="Power BI, DAX, Data Visualization"></label>
+              <label><span data-company-i18n="courseDescription">Descripció</span><textarea name="description" rows="4" required></textarea></label>
+              <button class="tm-button tm-button--company" type="submit" data-company-i18n="saveCourse">Desar formació</button>
+              <p class="company-form__message" id="course-message" role="status"></p>
+            </form>
+          </article>
+        </div>
+
+        <!-- Resum local dels continguts creats durant la demostració. -->
+        <section class="saved-content" aria-live="polite">
+          <div><h3 data-company-i18n="savedJobs">Ofertes desades</h3><div class="saved-list" id="saved-jobs"></div></div>
+          <div><h3 data-company-i18n="savedCourses">Formacions desades</h3><div class="saved-list" id="saved-courses"></div></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="tm-footer">
+    <div><a class="tm-brand" href="/">TalentMatch AI</a><p data-company-i18n="footerClaim">Matching explicable per a equips de contractació.</p></div>
+    <div><h3 data-company-i18n="footerCompany">Empresa</h3><div class="tm-footer__links"><a href="#ofertes" data-company-i18n="navJobs">Ofertes</a><a href="#formacio" data-company-i18n="navTraining">Formació</a><a href="#" data-company-i18n="support">Suport</a></div></div>
+    <div><h3>Legal</h3><div class="tm-footer__links"><a href="#" data-company-i18n="privacy">Privacitat</a><a href="#" data-company-i18n="terms">Termes</a></div></div>
+    <div class="tm-footer__copyright">© 2026 TalentMatch AI</div>
+  </footer>
+  <script type="module" src="/js/company.js"></script>
+</body>
+</html>

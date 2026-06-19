@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    id="meta-description"
+    name="description"
+    content="TalentMatch analitza el teu currículum i t'ajuda a trobar les oportunitats laborals que encaixen millor amb tu."
+  >
+  <title>TalentMatch | Troba la teva oportunitat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <!-- Estils compartits i tema visual específic del portal candidat. -->
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/candidate.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="TalentMatch, pàgina d'inici" data-i18n-aria="brandHome">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" role="img">
+          <path d="M9 8.5h14M16 8.5v15M10.5 15.5 16 21l5.5-5.5"/>
+        </svg>
+      </span>
+      <span>TalentMatch AI</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Navegació principal" data-i18n-aria="navLabel">
+      <a href="#com-funciona" data-i18n="navHow">Com funciona</a>
+      <a href="#avantatges" data-i18n="navBenefits">Avantatges</a>
+      <label class="language-picker">
+        <span class="sr-only" data-i18n="languageLabel">Idioma</span>
+        <select id="language-selector" aria-label="Idioma">
+          <option value="ca">Català</option>
+          <option value="es">Castellano</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+      <a class="nav-button" href="#pujar-cv" data-i18n="navStart">Comença ara</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          <span data-i18n="heroEyebrow">El teu pròxim pas comença aquí</span>
+        </span>
+
+        <h1><span class="hero-title-main" data-i18n="heroTitle">El teu talent mereix el</span> <span data-i18n="heroAccent">match perfecte.</span></h1>
+
+        <p class="hero-text" data-i18n="heroText">
+          Analitzem el teu currículum, coneixem què busques i et connectem
+          amb les oportunitats laborals que millor encaixen amb tu.
+        </p>
+
+        <div class="trust-row" aria-label="Característiques del servei" data-i18n-aria="trustLabel">
+          <span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m7 12 3 3 7-7"/>
+            </svg>
+            <span data-i18n="trustFast">Ràpid i senzill</span>
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m7 12 3 3 7-7"/>
+            </svg>
+            <span data-i18n="trustPrivate">Dades protegides</span>
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m7 12 3 3 7-7"/>
+            </svg>
+            <span data-i18n="trustPersonal">Recomanacions personalitzades</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="upload-card" id="pujar-cv">
+        <div class="card-heading">
+          <div>
+            <span class="step-label" data-i18n="stepOne">PAS 1 DE 3</span>
+            <h2 data-i18n="uploadTitle">Puja el teu currículum</h2>
+          </div>
+          <span class="file-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 3h7l4 4v14H7z"/>
+              <path d="M14 3v5h5M9.5 13h5M9.5 17h5"/>
+            </svg>
+          </span>
+        </div>
+
+        <p class="card-intro" data-i18n="uploadIntro">
+          L’analitzarem per identificar la teva experiència, formació i habilitats.
+        </p>
+
+        <form id="cv-form">
+          <label class="drop-zone" id="drop-zone" for="cv-file">
+            <input
+              id="cv-file"
+              name="cv"
+              type="file"
+              accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              required
+            >
+            <span class="upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 16V4M7.5 8.5 12 4l4.5 4.5M5 14v5h14v-5"/>
+              </svg>
+            </span>
+            <strong id="drop-title" data-i18n="dropTitle">Arrossega el teu CV aquí</strong>
+            <span id="drop-subtitle" data-i18n="dropSubtitle">o fes clic per seleccionar-lo</span>
+            <small data-i18n="dropFormats">Formats acceptats: PDF o DOCX · Màxim 10 MB</small>
+          </label>
+
+          <div class="file-selected" id="file-selected" hidden>
+            <span class="selected-file-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 3h7l4 4v14H7z"/>
+                <path d="M14 3v5h5"/>
+              </svg>
+            </span>
+            <span class="file-details">
+              <strong id="file-name"></strong>
+              <small id="file-size"></small>
+            </span>
+            <button type="button" class="remove-file" id="remove-file" aria-label="Eliminar l'arxiu" data-i18n-aria="removeFile">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m7 7 10 10M17 7 7 17"/>
+              </svg>
+            </button>
+          </div>
+
+          <p class="form-message" id="form-message" role="alert"></p>
+
+          <button class="primary-button" id="submit-button" type="submit">
+            <span data-i18n="analyzeButton">Analitza el meu CV</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M14 7l5 5-5 5"/>
+            </svg>
+          </button>
+        </form>
+
+        <p class="privacy-note">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="10" width="14" height="10" rx="2"/>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+          <span data-i18n="privacy">El teu CV és privat i no es comparteix amb tercers.</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="analysis-section" id="resultat" hidden>
+      <div class="analysis-shell">
+        <div class="analysis-topbar">
+          <div>
+            <span class="eyebrow" data-i18n="analyzedEyebrow">CV ANALITZAT</span>
+            <h2 data-i18n="analyzedTitle">Això és el que hem entès del teu perfil</h2>
+          </div>
+          <button class="secondary-button" id="analyze-another" type="button">
+            <span data-i18n="anotherCv">Analitza un altre CV</span>
+          </button>
+        </div>
+
+        <div class="chat-layout">
+          <div class="chat-panel">
+            <div class="assistant-message">
+              <span class="assistant-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 5h16v11H9l-5 4z"/>
+                  <path d="M8 9h8M8 12h5"/>
+                </svg>
+              </span>
+              <div class="message-bubble">
+                <span class="message-author">TalentMatch</span>
+                <p id="analysis-summary"></p>
+                <strong data-i18n="keyPoints">Punts clau detectats</strong>
+                <ul id="analysis-highlights"></ul>
+              </div>
+            </div>
+
+            <div class="chat-placeholder">
+              <span data-i18n="nextStep">Pròxim pas</span>
+              <p data-i18n="chatDescription">
+                Aquí apareixerà el chatbot per completar el perfil amb preguntes
+                sobre objectius, preferències i disponibilitat.
+              </p>
+              <div class="fake-chat-input">
+                <span data-i18n="chatPlaceholder">El xat s’activarà a la següent fase...</span>
+                <button type="button" disabled aria-label="Enviar" data-i18n-aria="send">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m4 4 16 8-16 8 3-8zM7 12h13"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="profile-panel">
+            <div class="profile-heading">
+              <span class="file-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 3h7l4 4v14H7z"/>
+                  <path d="M14 3v5h5M9.5 13h5M9.5 17h5"/>
+                </svg>
+              </span>
+              <div>
+                <small data-i18n="processedDocument">Document processat</small>
+                <strong id="result-filename"></strong>
+              </div>
+            </div>
+
+            <div class="document-stats" id="document-stats"></div>
+
+            <div class="result-group" id="skills-group">
+              <h3 data-i18n="skills">Competències</h3>
+              <div class="tag-list" id="skills-list"></div>
+            </div>
+
+            <div class="result-group" id="languages-group">
+              <h3 data-i18n="languages">Idiomes</h3>
+              <div class="tag-list tag-list--mint" id="languages-list"></div>
+            </div>
+
+            <details class="text-preview">
+              <summary data-i18n="showPreview">Veure una mostra del text llegit</summary>
+              <pre id="text-preview"></pre>
+            </details>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="process-section" id="com-funciona">
+      <div class="section-heading">
+        <span class="eyebrow" data-i18n="easyEyebrow">AIXÍ DE FÀCIL</span>
+        <h2 data-i18n="processTitle">Del teu CV a la teva pròxima oportunitat</h2>
+      </div>
+
+      <div class="steps-grid">
+        <article class="process-card">
+          <span class="step-number">01</span>
+          <div class="process-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 3h7l4 4v14H7z"/>
+              <path d="M14 3v5h5M9.5 13h5M9.5 17h3"/>
+            </svg>
+          </div>
+          <h3 data-i18n="processOneTitle">Comparteix el teu CV</h3>
+          <p data-i18n="processOneText">Puja’l en PDF o DOCX. Nosaltres ens encarreguem d’entendre’l.</p>
+        </article>
+
+        <article class="process-card">
+          <span class="step-number">02</span>
+          <div class="process-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16v11H9l-5 4z"/>
+              <path d="M8 9h8M8 12h5"/>
+            </svg>
+          </div>
+          <h3 data-i18n="processTwoTitle">Completa el teu perfil</h3>
+          <p data-i18n="processTwoText">Et farem unes preguntes breus per conèixer objectius i preferències.</p>
+        </article>
+
+        <article class="process-card" id="avantatges">
+          <span class="step-number">03</span>
+          <div class="process-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="8"/>
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M18 6 21 3M18 3h3v3"/>
+            </svg>
+          </div>
+          <h3 data-i18n="processThreeTitle">Descobreix els teus matches</h3>
+          <p data-i18n="processThreeText">Rep ofertes ordenades segons la compatibilitat real amb el teu perfil.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32">
+          <path d="M9 8.5h14M16 8.5v15M10.5 15.5 16 21l5.5-5.5"/>
+        </svg>
+      </span>
+      <span>TalentMatch</span>
+    </a>
+    <p data-i18n="footerText">Troba l’oportunitat que encaixa amb tu.</p>
+    <span>© 2026 TalentMatch</span>
+  </footer>
+
+  <!-- La lògica d'aquesta pàgina està aïllada de la homepage i l'empresa. -->
+  <script type="module" src="/js/candidate.js"></script>
+</body>
+</html>

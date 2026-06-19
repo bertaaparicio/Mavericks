@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TalentMatch AI connecta talent i oportunitats mitjançant intel·ligència artificial explicable.">
+  <title>TalentMatch AI | Talent i oportunitat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <!-- Capçalera comuna. Els enllaços informatius apunten a seccions de la home. -->
+  <header class="tm-header">
+    <a class="tm-brand" href="/" aria-label="TalentMatch AI">
+      <span class="tm-brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M5 6h14M12 6v13M7 13l5 5 5-5"/></svg>
+      </span>
+      <span class="tm-brand__name">TalentMatch <strong>AI</strong></span>
+    </a>
+
+    <nav class="tm-nav" aria-label="Navegació principal">
+      <a href="#com-funciona" data-home-i18n="navHow">Com funciona</a>
+      <a href="#preus" data-home-i18n="navPricing">Preus</a>
+      <a href="#blog" data-home-i18n="navBlog">Blog</a>
+      <a href="#login" data-home-i18n="navLogin">Login</a>
+      <div class="tm-nav__actions">
+        <select class="tm-language" id="home-language" aria-label="Idioma">
+          <option value="ca">CAT</option><option value="es">ES</option><option value="en">EN</option>
+        </select>
+        <a class="tm-button tm-button--ghost" href="/company" data-home-i18n="companyAccess">Accés empreses</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Proposta de valor que uneix els dos tipus d'usuari. -->
+    <section class="home-hero">
+      <div class="tm-container home-hero__grid">
+        <div class="home-hero__copy">
+          <span class="tm-eyebrow" data-home-i18n="eyebrow">MATCHING INTEL·LIGENT I EXPLICABLE</span>
+          <h1 data-home-i18n="heroTitle">La trobada perfecta entre talent i oportunitat, potenciada per IA.</h1>
+          <p data-home-i18n="heroText">Optimitzem la cerca de feina per a candidats i accelerem la contractació per a empreses. Sense biaixos, sense perdre temps i basat en dades.</p>
+          <div class="home-hero__actions">
+            <a class="tm-button tm-button--candidate" href="#tria-el-teu-cami" data-home-i18n="choosePath">Tria el teu camí</a>
+            <span data-home-i18n="freeStart">Comença gratis · Sense targeta</span>
+          </div>
+        </div>
+        <!--
+          PLACEHOLDER D'IMATGE:
+          substituirem aquest bloc per l'actiu definitiu que faciliti l'usuari.
+        -->
+        <div class="home-hero__visual">
+          <div class="image-placeholder">
+            <span class="image-placeholder__icon" aria-hidden="true">＋</span>
+            <strong data-home-i18n="imagePlaceholderTitle">Espai reservat per a la imatge principal</strong>
+            <small data-home-i18n="imagePlaceholderText">Aquí afegirem la il·lustració definitiva.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bifurcació principal: cada targeta navega al seu portal independent. -->
+    <section class="path-section" id="tria-el-teu-cami">
+      <div class="tm-container">
+        <div class="section-intro">
+          <span class="tm-eyebrow" data-home-i18n="chooseEyebrow">UNA PLATAFORMA, DOS CAMINS</span>
+          <h2 data-home-i18n="chooseTitle">Què necessites avui?</h2>
+        </div>
+
+        <div class="path-grid">
+          <article class="path-card path-card--candidate">
+            <div class="path-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21c.7-5 3.3-7 8-7s7.3 2 8 7M18 4l2-2M20 7h3"/></svg>
+            </div>
+            <span class="path-card__label" data-home-i18n="candidateLabel">PER A PERSONES</span>
+            <h3 data-home-i18n="candidateTitle">Busco feina</h3>
+            <p class="path-card__pain" data-home-i18n="candidatePain">Cansat d’enviar CVs al buit i no rebre resposta?</p>
+            <ul>
+              <li data-home-i18n="candidateBenefit1">Descobreix el teu percentatge real d’encaix abans d’aplicar.</li>
+              <li data-home-i18n="candidateBenefit2">Optimitza el teu CV automàticament per a cada oferta.</li>
+              <li data-home-i18n="candidateBenefit3">Rep un pla personalitzat per millorar el teu perfil.</li>
+            </ul>
+            <a class="tm-button tm-button--candidate" href="/candidate" data-home-i18n="candidateCta">Començar gratis</a>
+            <small data-home-i18n="candidateMicro">Uneix-te a candidats que ja estan aconseguint entrevistes.</small>
+          </article>
+
+          <article class="path-card path-card--company">
+            <div class="path-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14M8 10h2M14 10h2M8 14h2M14 14h2M10 21v-4h4v4"/></svg>
+            </div>
+            <span class="path-card__label" data-home-i18n="companyLabel">PER A EMPRESES</span>
+            <h3 data-home-i18n="companyTitle">Soc empresa o reclutador</h3>
+            <p class="path-card__pain" data-home-i18n="companyPain">Perds hores filtrant currículums que no encaixen?</p>
+            <ul>
+              <li data-home-i18n="companyBenefit1">Rep només candidats amb alta compatibilitat real.</li>
+              <li data-home-i18n="companyBenefit2">Redueix el temps necessari per contractar.</li>
+              <li data-home-i18n="companyBenefit3">Accedeix a un rànquing justificat per IA.</li>
+            </ul>
+            <a class="tm-button tm-button--company" href="/company" data-home-i18n="companyCta">Veure solució per a RRHH</a>
+            <small data-home-i18n="companyMicro">Prova gratuïta per a equips de contractació.</small>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proves de confiança centrades en privacitat, explicabilitat i equitat. -->
+    <section class="trust-section" id="com-funciona">
+      <div class="tm-container">
+        <div class="section-intro">
+          <span class="tm-eyebrow" data-home-i18n="trustEyebrow">CONFIANÇA PER DISSENY</span>
+          <h2 data-home-i18n="trustTitle">Tecnologia transparent i ètica.</h2>
+        </div>
+        <div class="trust-grid">
+          <article><span>🔒</span><h3 data-home-i18n="privacyTitle">Privacitat total</h3><p data-home-i18n="privacyText">Les teves dades no es venen. Processament segur i controlat.</p></article>
+          <article><span>🤖</span><h3 data-home-i18n="explainTitle">IA explicable</h3><p data-home-i18n="explainText">T’expliquem el perquè de cada recomanació i puntuació.</p></article>
+          <article><span>⚖️</span><h3 data-home-i18n="biasTitle">Sense biaixos</h3><p data-home-i18n="biasText">Prioritzem competències, experiència i mèrit professional.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="tm-footer">
+    <div><a class="tm-brand" href="/">TalentMatch AI</a><p data-home-i18n="footerClaim">La tecnologia que fa que talent i oportunitats es trobin.</p></div>
+    <div><h3 data-home-i18n="footerProduct">Producte</h3><div class="tm-footer__links"><a href="#com-funciona" data-home-i18n="navHow">Com funciona</a><a href="#preus" data-home-i18n="navPricing">Preus</a><a href="#blog" data-home-i18n="navBlog">Blog</a></div></div>
+    <div><h3 data-home-i18n="footerLegal">Legal i suport</h3><div class="tm-footer__links"><a href="#" data-home-i18n="privacyLink">Privacitat</a><a href="#" data-home-i18n="termsLink">Termes</a><a href="mailto:suport@talentmatch.ai" data-home-i18n="contactLink">Contacte</a></div></div>
+    <div class="tm-footer__copyright">© 2026 TalentMatch AI</div>
+  </footer>
+
+  <script type="module" src="/js/home.js"></script>
+</body>
+</html>
