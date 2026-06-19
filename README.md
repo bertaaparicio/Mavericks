@@ -9,9 +9,14 @@ Tu misión es diseñar una arquitectura modular, escalable y explicable que comb
 
 ## Executar TalentMatch
 
-1. Instal·la les dependències amb `pip install -r requirements.txt`.
-2. Inicia el servidor amb `python main.py`.
-3. Obre `http://localhost:8000` al navegador.
+1. Instal·la les dependències Python amb `py -m pip install -r requirements.txt`.
+2. Entra a `frontend` i executa `npm.cmd install`.
+3. Compila React amb `npm.cmd run build`.
+4. Torna a l'arrel i inicia el servidor amb `py main.py`.
+5. Obre `http://localhost:8000` al navegador.
+
+Per desenvolupar el frontend amb recàrrega automàtica, executa
+`npm.cmd run dev` dins de `frontend` i mantén també `py main.py` actiu.
 
 La primera versió accepta CVs en PDF o DOCX, n'extreu el text i mostra un
 resum del perfil, competències, idiomes i punts clau. Els PDF escanejats sense

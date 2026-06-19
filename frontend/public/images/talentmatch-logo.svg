@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">TalentMatch AI</title>
+  <desc id="description">Dos elementos entrelazados forman una T, una M y una flecha ascendente.</desc>
+
+  <defs>
+    <linearGradient id="purple" x1="88" y1="80" x2="330" y2="394" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C64DFF"/>
+      <stop offset="0.52" stop-color="#A100FF"/>
+      <stop offset="1" stop-color="#7800C2"/>
+    </linearGradient>
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#420066" flood-opacity=".2"/>
+    </filter>
+  </defs>
+
+  <!-- Pieza lila exterior: estructura y unión entre ambos perfiles. -->
+  <path
+    d="M256 70 442 176v176L324 420V260l-68-39-68 39v160L70 352V176L256 70Z"
+    fill="#7800C2"
+    filter="url(#softShadow)"
+  />
+
+  <!-- Pieza blanca: talento, oportunidad y contraste. -->
+  <path
+    d="m256 70 116 66-68 39-48-27-118 68v79l50 29v-64l68-39 68 39v64l50-29v-79l68-40v176L324 420V300l-68-39-68 39v120L70 352V176L256 70Z"
+    fill="#fff"
+  />
+
+  <!-- Flecha ascendente integrada en el espacio central. -->
+  <path
+    d="m256 126 61 65h-36v70h-50v-70h-36l61-65Z"
+    fill="url(#purple)"
+  />
+
+  <!-- Pequeños cortes que refuerzan el efecto de dos piezas encajadas. -->
+  <path d="M70 176 188 244v54L70 230v-54Z" fill="#A100FF"/>
+  <path d="m442 176-118 68v54l118-68v-54Z" fill="#C64DFF"/>
+</svg>

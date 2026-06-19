@@ -23,36 +23,26 @@ from backend.services.cv_reader import MAX_FILE_SIZE, analyse_cv
 
 
 ROOT = Path(__file__).resolve().parent.parent
-FRONTEND_ROOT = ROOT / "frontend"
+FRONTEND_ROOT = ROOT / "frontend" / "dist"
 HOST = "127.0.0.1"
 PORT = 8000
-PAGE_ROUTES = {
-    "/": "index.html",
-    "/index.html": "index.html",
-    "/candidate": "pages/candidate.html",
-    "/candidate.html": "pages/candidate.html",
-    "/company": "pages/company.html",
-    "/company.html": "pages/company.html",
-}
 
 
 class TalentMatchHandler(BaseHTTPRequestHandler):
     server_version = "TalentMatch/0.1"
 
     def do_GET(self) -> None:
-        """Serveix pàgines HTML i recursos estàtics de forma segura."""
+        """Serveix el build de React i aplica el fallback de React Router."""
 
         path = unquote(urlparse(self.path).path)
-        relative_path = PAGE_ROUTES.get(path)
-
-        # Els recursos CSS, JS i imatges es poden demanar directament.
-        if relative_path is None and path.startswith(("/css/", "/js/", "/assets/")):
-            relative_path = path.lstrip("/")
-
-        if relative_path is None:
-            self.send_error(404, "Recurs no trobat")
+        if not FRONTEND_ROOT.is_dir():
+            self.send_error(
+                503,
+                "Frontend no compilat. Executa npm.cmd install i npm.cmd run build dins de frontend.",
+            )
             return
 
+        relative_path = path.lstrip("/") or "index.html"
         # ``resolve`` evita que una ruta amb ".." pugui sortir del frontend.
         file_path = (FRONTEND_ROOT / relative_path).resolve()
         if FRONTEND_ROOT.resolve() not in file_path.parents:
@@ -60,8 +50,8 @@ class TalentMatchHandler(BaseHTTPRequestHandler):
             return
 
         if not file_path.is_file():
-            self.send_error(404, "Fitxer no trobat")
-            return
+            # Les rutes de React (/candidate, /company...) carreguen la SPA.
+            file_path = FRONTEND_ROOT / "index.html"
 
         content_type, _ = mimetypes.guess_type(file_path.name)
         payload = file_path.read_bytes()
