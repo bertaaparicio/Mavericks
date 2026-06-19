@@ -1,0 +1,5 @@
+[project]
+name = "server"
+version = "0.0.0"
+description = "TalentMatchAI"
+requires-python = ">=3.14"
