@@ -1,22 +1,22 @@
+"""Quick database connection test."""
+
+import os
+
 import psycopg2
 
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST", ""),
+    "database": os.getenv("DB_NAME", "postgres"),
+    "user": os.getenv("DB_USER", "grau"),
+    "password": os.getenv("DB_PASSWORD", ""),
+    "port": os.getenv("DB_PORT", "5432"),
+}
+
 try:
-    # 1. Establecer la conexión
-    conexion = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="postgres",
-        password="12345",
-        port="5432"
-    )
-    
+    conexion = psycopg2.connect(**DB_CONFIG)
     cursor = conexion.cursor()
 
-    # 2. Lanzar la consulta
-    consulta_sql = "SELECT * FROM jobposts LIMIT 5;"
-    cursor.execute(consulta_sql)
-
-    # 3. Obtener y mostrar los resultados
+    cursor.execute("SELECT * FROM jobposts LIMIT 5;")
     filas = cursor.fetchall()
     for fila in filas:
         print(fila)
@@ -25,7 +25,6 @@ except Exception as e:
     print(f"Error al conectar con la base de datos: {e}")
 
 finally:
-    # 4. Cerrar la conexión
-    if 'conexion' in locals() and conexion:
+    if "conexion" in locals() and conexion:
         cursor.close()
         conexion.close()

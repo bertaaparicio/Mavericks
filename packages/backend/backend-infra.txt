@@ -1,0 +1,63 @@
+Backend Structure
+packages/backend/
+├── app/
+│   ├── main.py                          # FastAPI app, 6 endpoints, middlewares, startup
+│   │
+│   ├── ai/                              # Ollama LLM integration
+│   │   ├── config.py                    # OllamaSettings (model, host, timeout)
+│   │   ├── ollama_client.py             # Async Ollama wrapper with retry logic
+│   │   ├── schemas.py                   # ChatMessage, ChatRequest, ModelResponse
+│   │   ├── model.py                     # Re-exports for convenience
+│   │   └── README.md
+│   │
+│   └── services/                        # Business logic
+│       ├── pdf_service.py               # PDF → text (PyPDF2)
+│       ├── profile_parser.py            # LLM output → structured search params
+│       ├── database_service.py          # PostgreSQL connection, search, ranking, ratio
+│       └── qa_service.py                # Q&A session management (init, answer, finalize)
+│
+├── scripts/
+│   └── init_db.py                       # [utility] Create table + import CSV
+│
+├── tests/
+│   ├── test_pdf_service.py              # 2 tests: PDF extraction
+│   ├── test_profile_parser.py           # 7 tests: JSON/YAML/kv parsing
+│   ├── test_database_service.py         # 6 tests: ranking logic, query mock
+│   └── test_main.py                     # 8 tests: endpoints, CORS, validation
+│
+├── Dockerfile                           # Container build
+├── pyproject.toml                       # Dependencies (no CrewAI)
+├── README.md                            # Full API docs with curl examples
+└── .python-version                      # 3.12.3
+Data Flow
+PDF upload ──► /match-cv (file)
+                  │
+                  ▼
+          pdf_service.py ──► extract_text_from_pdf()
+                  │
+                  ▼
+          OllamaModelClient.chat() ──► CV analysis prompt
+                  │
+                  ▼
+          profile_parser.py ──► parse_cv_profile()
+                  │
+                  ▼
+          database_service.search_jobs() ──► PostgreSQL
+                  │
+                  ▼
+          ranked_jobs (JSON) ──► top 10 with match_ratio%
+Q&A flow:
+  /cv-qa/init (file) ──► pdf_service ──► qa_service.init_session()
+                                              │
+  /cv-qa/answer (session_id + answer) ◄──── question
+                                              │
+                                        is_complete? ──► profile JSON
+  /match-from-profile (profile JSON) ──► database_service ──► ranked_jobs
+API Endpoints
+Method	Endpoint	Input	Output
+GET	/health	—	{"status": "ok"}
+POST	/match-cv	PDF file (multipart)	CV profile + ranked jobs
+POST	/cv-qa/init	PDF file	session_id + first question
+POST	/cv-qa/answer	session_id + answer	next question OR final profile
+GET	/cv-qa/{id}	—	session state
+POST	/match-from-profile	profile JSON	ranked jobs
