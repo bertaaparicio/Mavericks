@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import logging
 from collections.abc import AsyncIterator, Iterable
 from typing import Any
 
@@ -11,12 +13,17 @@ from ollama import AsyncClient, ResponseError
 from app.ai.config import OllamaSettings
 from app.ai.schemas import ChatMessage, ChatRequest, GenerateRequest, ModelResponse
 
+logger = logging.getLogger(__name__)
+
 
 class OllamaModelError(RuntimeError):
     """Raised when an Ollama model request fails."""
 
 
 _OLLAMA_EXCEPTIONS = (ConnectionError, HTTPError, ResponseError, TimeoutError)
+_MAX_RETRIES = 3
+_BASE_DELAY = 1.0
+_MAX_DELAY = 10.0
 
 
 class OllamaModelClient:
@@ -26,8 +33,10 @@ class OllamaModelClient:
         self,
         settings: OllamaSettings | None = None,
         client: AsyncClient | None = None,
+        max_retries: int = _MAX_RETRIES,
     ) -> None:
         self.settings = settings or OllamaSettings.from_env()
+        self._max_retries = max_retries
         self._owns_client = client is None
         self._client = client or AsyncClient(
             host=self.settings.host,
@@ -41,8 +50,6 @@ class OllamaModelClient:
         await self.close()
 
     async def close(self) -> None:
-        """Close the underlying async HTTP client when this wrapper owns it."""
-
         if not self._owns_client:
             return
 
@@ -60,8 +67,9 @@ class OllamaModelClient:
         self,
         request: ChatRequest,
     ) -> ModelResponse:
-        """Send chat messages to the configured Ollama model."""
+        return await self._with_retry(self._chat, request)
 
+    async def _chat(self, request: ChatRequest) -> ModelResponse:
         try:
             response = await self._client.chat(**self._chat_payload(request))
         except _OLLAMA_EXCEPTIONS as exc:
@@ -81,8 +89,6 @@ class OllamaModelClient:
         self,
         request: ChatRequest,
     ) -> AsyncIterator[str]:
-        """Yield content chunks from a streaming chat request."""
-
         try:
             stream = await self._client.chat(
                 **self._chat_payload(request),
@@ -101,8 +107,9 @@ class OllamaModelClient:
         self,
         request: GenerateRequest,
     ) -> ModelResponse:
-        """Generate text from a single prompt."""
+        return await self._with_retry(self._generate, request)
 
+    async def _generate(self, request: GenerateRequest) -> ModelResponse:
         try:
             response = await self._client.generate(**self._generate_payload(request))
         except _OLLAMA_EXCEPTIONS as exc:
@@ -120,8 +127,6 @@ class OllamaModelClient:
         self,
         request: GenerateRequest,
     ) -> AsyncIterator[str]:
-        """Yield content chunks from a streaming generate request."""
-
         try:
             stream = await self._client.generate(
                 **self._generate_payload(request),
@@ -136,14 +141,38 @@ class OllamaModelClient:
             raise OllamaModelError(str(exc)) from exc
 
     async def list_models(self) -> list[dict[str, Any]]:
-        """Return locally available Ollama models."""
-
         try:
             response = await self._client.list()
         except _OLLAMA_EXCEPTIONS as exc:
             raise OllamaModelError(str(exc)) from exc
 
         return [_to_dict(model) for model in _to_dict(response).get("models", [])]
+
+    async def _with_retry(
+        self,
+        fn: callable,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
+        last_exc: Exception | None = None
+        for attempt in range(self._max_retries):
+            try:
+                return await fn(*args, **kwargs)
+            except OllamaModelError as exc:
+                last_exc = exc
+                if attempt < self._max_retries - 1:
+                    delay = min(_BASE_DELAY * (2 ** attempt), _MAX_DELAY)
+                    logger.warning(
+                        "Ollama request failed (attempt %d/%d), retrying in %.1fs: %s",
+                        attempt + 1, self._max_retries, delay, exc,
+                    )
+                    await asyncio.sleep(delay)
+                else:
+                    logger.error(
+                        "Ollama request failed after %d attempts: %s",
+                        self._max_retries, exc,
+                    )
+        raise last_exc  # type: ignore[misc]
 
     def _chat_payload(self, request: ChatRequest) -> dict[str, Any]:
         messages = _with_system_message(request.messages, request.system)

@@ -20,5 +20,6 @@ tmp/
 .venv
 env/
 venv/
+.pytest_cache/
 frontend/node_modules/
 frontend/dist/

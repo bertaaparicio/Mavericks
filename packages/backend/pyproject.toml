@@ -2,10 +2,22 @@
 name = "server"
 version = "0.0.0"
 description = "TalentMatchAI"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "httpx>=0.27",
     "langchain-text-splitters>=1.1",
     "ollama>=0.6",
+    "fastapi>=0.137",
+    "uvicorn>=0.49",
+    "PyPDF2>=3.0",
+    "psycopg2-binary>=2.9",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.25",
+    "ruff>=0.9",
     "PyPDF2>=3",
 ]
