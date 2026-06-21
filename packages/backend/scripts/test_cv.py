@@ -82,6 +82,7 @@ def main() -> None:
     # Step 1: Extract text
     print("1. Extracting text from PDF...")
     cv_text = extract_text_from_pdf(str(pdf_path))
+    
     if not cv_text.strip():
         print("   ERROR: PDF is empty or could not be parsed", file=sys.stderr)
         sys.exit(1)
@@ -89,7 +90,8 @@ def main() -> None:
 
     # Step 2: AI analysis
     print("2. Analyzing CV with AI...")
-    raw_output = asyncio.run(analyze_cv(cv_text, model=args.model))
+    # raw_output = asyncio.run(analyze_cv(cv_text, model=args.model))
+    raw_output = asyncio.run(analyze_cv(cv_text, model="llama2:latest"))
     print(f"   AI response: {len(raw_output)} chars\n")
 
     # Step 3: Parse profile

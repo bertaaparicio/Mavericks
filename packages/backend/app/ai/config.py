@@ -7,8 +7,8 @@ from dataclasses import dataclass
 
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
-DEFAULT_OLLAMA_MODEL = "gpt-oss:20b"
-DEFAULT_OLLAMA_TIMEOUT = 60.0
+DEFAULT_OLLAMA_MODEL = "llama2:latest"
+DEFAULT_OLLAMA_TIMEOUT = 600.0
 DEFAULT_OLLAMA_KEEP_ALIVE = "5m"
 
 
