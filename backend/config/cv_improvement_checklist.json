@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "plan": "pro",
+  "description": "Auditoria de qualitat i millora del CV disponible per al pla PRO.",
+  "status_values": ["good", "improve", "needs_market_data"],
+  "checks": [
+    {
+      "id": "quantified_results",
+      "label": {
+        "ca": "Quantificació de resultats",
+        "es": "Cuantificación de resultados",
+        "en": "Quantified results"
+      },
+      "evaluation": "heuristic",
+      "weight": 25
+    },
+    {
+      "id": "skill_gaps",
+      "label": {
+        "ca": "Forats de competències",
+        "es": "Brechas de competencias",
+        "en": "Skill gaps"
+      },
+      "evaluation": "job_market_comparison",
+      "weight": 25
+    },
+    {
+      "id": "ats_optimization",
+      "label": {
+        "ca": "Optimització ATS",
+        "es": "Optimización ATS",
+        "en": "ATS optimization"
+      },
+      "evaluation": "heuristic",
+      "weight": 20
+    },
+    {
+      "id": "elevator_pitch",
+      "label": {
+        "ca": "Elevator pitch",
+        "es": "Elevator pitch",
+        "en": "Elevator pitch"
+      },
+      "evaluation": "heuristic",
+      "weight": 15
+    },
+    {
+      "id": "action_verbs",
+      "label": {
+        "ca": "Verbs d'acció",
+        "es": "Verbos de acción",
+        "en": "Action verbs"
+      },
+      "evaluation": "heuristic",
+      "weight": 15
+    }
+  ]
+}

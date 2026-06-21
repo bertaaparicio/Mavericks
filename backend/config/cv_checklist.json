@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "description": "Checklist de perfil laboral que el lector de CV intenta completar abans del matching.",
+  "priority_rules": {
+    "maximum": ["free", "pro"],
+    "high": ["pro"],
+    "medium": ["pro"]
+  },
+  "status_values": ["completed", "uncertain", "missing"],
+  "sections": [
+    {
+      "id": "identity",
+      "label": {"ca": "Identitat i contacte", "es": "Identidad y contacto", "en": "Identity and contact"},
+      "priority": "maximum",
+      "fields": [
+        {"id": "full_name", "required": true, "question": {"ca": "Com et dius?", "es": "¿Cómo te llamas?", "en": "What is your full name?"}},
+        {"id": "email", "required": true, "question": {"ca": "Quin és el teu correu electrònic?", "es": "¿Cuál es tu correo electrónico?", "en": "What is your email address?"}},
+        {"id": "phone", "required": true, "question": {"ca": "Quin és el teu telèfon de contacte?", "es": "¿Cuál es tu teléfono de contacto?", "en": "What is your contact phone number?"}},
+        {"id": "current_location", "required": true, "question": {"ca": "A quina ciutat vius actualment?", "es": "¿En qué ciudad vives actualmente?", "en": "Which city do you currently live in?"}},
+        {"id": "linkedin_or_portfolio", "required": false, "question": {"ca": "Tens LinkedIn o portafolis professional?", "es": "¿Tienes LinkedIn o portfolio profesional?", "en": "Do you have a LinkedIn profile or professional portfolio?"}},
+        {"id": "preferred_workday", "required": true, "question": {"ca": "Busques jornada completa, parcial o totes dues?", "es": "¿Buscas jornada completa, parcial o ambas?", "en": "Are you looking for full-time, part-time or both?"}},
+        {"id": "internship_availability", "required": false, "question": {"ca": "Tens disponibilitat per fer pràctiques?", "es": "¿Tienes disponibilidad para realizar prácticas?", "en": "Are you available for an internship?"}}
+      ]
+    },
+    {
+      "id": "professional_profile",
+      "label": {"ca": "Perfil professional", "es": "Perfil profesional", "en": "Professional profile"},
+      "priority": "maximum",
+      "fields": [
+        {"id": "primary_role", "required": true, "question": {"ca": "Quin tipus de rol descriu millor el teu perfil?", "es": "¿Qué tipo de rol describe mejor tu perfil?", "en": "Which role best describes your profile?"}},
+        {"id": "years_experience", "required": true, "question": {"ca": "Quants anys d’experiència tens en aquest àmbit?", "es": "¿Cuántos años de experiencia tienes en este ámbito?", "en": "How many years of experience do you have in this field?"}},
+        {"id": "seniority", "required": false, "question": {"ca": "Et consideres júnior, mid o sènior?", "es": "¿Te consideras junior, mid o senior?", "en": "Would you describe yourself as junior, mid-level or senior?"}},
+        {"id": "sectors", "required": true, "question": {"ca": "En quin sector tens més experiència?", "es": "¿En qué sector tienes más experiencia?", "en": "Which sector do you have the most experience in?"}},
+        {"id": "main_responsibilities", "required": true, "question": {"ca": "Quines han estat les teves responsabilitats principals?", "es": "¿Cuáles han sido tus principales responsabilidades?", "en": "What have your main responsibilities been?"}}
+      ]
+    },
+    {
+      "id": "skills",
+      "label": {"ca": "Aptituds i competències", "es": "Aptitudes y competencias", "en": "Skills and competencies"},
+      "priority": "maximum",
+      "fields": [
+        {"id": "technical_skills", "required": true, "question": {"ca": "Quines són les teves principals habilitats tècniques?", "es": "¿Cuáles son tus principales habilidades técnicas?", "en": "What are your main technical skills?"}},
+        {"id": "tools", "required": true, "question": {"ca": "Quines eines o tecnologies domines?", "es": "¿Qué herramientas o tecnologías dominas?", "en": "Which tools or technologies do you use confidently?"}},
+        {"id": "soft_skills", "required": true, "question": {"ca": "Quines tres competències personals et defineixen millor?", "es": "¿Qué tres competencias personales te definen mejor?", "en": "Which three soft skills describe you best?"}},
+        {"id": "certifications", "required": false, "question": {"ca": "Tens alguna certificació que no aparegui al CV?", "es": "¿Tienes alguna certificación que no aparezca en el CV?", "en": "Do you have any certifications not listed on your résumé?"}}
+      ]
+    },
+    {
+      "id": "education",
+      "label": {"ca": "Formació", "es": "Formación", "en": "Education"},
+      "priority": "maximum",
+      "fields": [
+        {"id": "highest_level", "required": true, "question": {"ca": "Quin és el nivell d’estudis més alt que has completat?", "es": "¿Cuál es el nivel de estudios más alto que has completado?", "en": "What is the highest level of education you have completed?"}},
+        {"id": "degrees", "required": true, "question": {"ca": "Quina titulació tens?", "es": "¿Qué titulación tienes?", "en": "Which qualification or degree do you hold?"}},
+        {"id": "education_center", "required": false, "question": {"ca": "En quin centre vas estudiar?", "es": "¿En qué centro estudiaste?", "en": "Where did you study?"}},
+        {"id": "specialization", "required": false, "question": {"ca": "Quina és la teva especialització?", "es": "¿Cuál es tu especialización?", "en": "What is your specialization?"}},
+        {"id": "graduation_date", "required": false, "question": {"ca": "Quan vas finalitzar els estudis?", "es": "¿Cuándo finalizaste tus estudios?", "en": "When did you finish your studies?"}},
+        {"id": "ongoing_education", "required": false, "question": {"ca": "Estàs cursant alguna formació actualment?", "es": "¿Estás cursando alguna formación actualmente?", "en": "Are you currently studying or training?"}}
+      ]
+    },
+    {
+      "id": "languages",
+      "label": {"ca": "Idiomes", "es": "Idiomas", "en": "Languages"},
+      "priority": "maximum",
+      "fields": [
+        {"id": "languages", "required": true, "question": {"ca": "Quins idiomes parles?", "es": "¿Qué idiomas hablas?", "en": "Which languages do you speak?"}},
+        {"id": "language_levels", "required": true, "question": {"ca": "Quin nivell tens de cada idioma?", "es": "¿Qué nivel tienes en cada idioma?", "en": "What is your level in each language?"}}
+      ]
+    },
+    {
+      "id": "career_goal",
+      "label": {"ca": "Objectiu professional", "es": "Objetivo profesional", "en": "Career goal"},
+      "priority": "medium",
+      "fields": [
+        {"id": "desired_role", "required": true, "question": {"ca": "Quin rol de treball estàs buscant?", "es": "¿Qué puesto de trabajo estás buscando?", "en": "Which role are you looking for?"}},
+        {"id": "alternative_roles", "required": false, "question": {"ca": "Quins altres rols també consideraries?", "es": "¿Qué otros roles considerarías?", "en": "Which other roles would you consider?"}},
+        {"id": "desired_sector", "required": false, "question": {"ca": "En quin sector t’agradaria treballar?", "es": "¿En qué sector te gustaría trabajar?", "en": "Which sector would you like to work in?"}},
+        {"id": "career_change", "required": false, "question": {"ca": "Vols continuar en el teu sector o canviar?", "es": "¿Quieres continuar en tu sector o cambiar?", "en": "Do you want to remain in your sector or change careers?"}},
+        {"id": "top_priority", "required": true, "question": {"ca": "Què és el més important per a tu en la pròxima feina?", "es": "¿Qué es lo más importante para ti en tu próximo empleo?", "en": "What matters most to you in your next job?"}}
+      ]
+    },
+    {
+      "id": "location_preferences",
+      "label": {"ca": "Localització i modalitat", "es": "Localización y modalidad", "en": "Location and work mode"},
+      "priority": "medium",
+      "fields": [
+        {"id": "commute_radius", "required": true, "question": {"ca": "Quin radi de desplaçament acceptes?", "es": "¿Qué radio de desplazamiento aceptas?", "en": "How far are you willing to commute?"}},
+        {"id": "work_mode", "required": true, "question": {"ca": "Prefereixes treball presencial, híbrid o remot?", "es": "¿Prefieres trabajo presencial, híbrido o remoto?", "en": "Do you prefer on-site, hybrid or remote work?"}},
+        {"id": "relocation", "required": false, "question": {"ca": "Acceptaries traslladar-te?", "es": "¿Aceptarías trasladarte?", "en": "Would you be willing to relocate?"}},
+        {"id": "travel", "required": false, "question": {"ca": "Estaries disposat o disposada a viatjar per feina?", "es": "¿Estarías dispuesto o dispuesta a viajar por trabajo?", "en": "Would you be willing to travel for work?"}}
+      ]
+    },
+    {
+      "id": "employment_conditions",
+      "label": {"ca": "Condicions laborals", "es": "Condiciones laborales", "en": "Employment conditions"},
+      "priority": "medium",
+      "fields": [
+        {"id": "contract_type", "required": false, "question": {"ca": "Quin tipus de contracte prefereixes?", "es": "¿Qué tipo de contrato prefieres?", "en": "Which contract type do you prefer?"}},
+        {"id": "preferred_schedule", "required": false, "question": {"ca": "Tens alguna preferència d’horari?", "es": "¿Tienes alguna preferencia de horario?", "en": "Do you have a preferred schedule?"}},
+        {"id": "start_availability", "required": true, "question": {"ca": "Quan podries començar?", "es": "¿Cuándo podrías empezar?", "en": "When could you start?"}},
+        {"id": "salary_range", "required": false, "question": {"ca": "Quin rang salarial esperes?", "es": "¿Qué rango salarial esperas?", "en": "What salary range are you expecting?"}}
+      ]
+    },
+    {
+      "id": "motivations",
+      "label": {"ca": "Motivacions", "es": "Motivaciones", "en": "Motivations"},
+      "priority": "medium",
+      "fields": [
+        {"id": "main_motivation", "required": true, "question": {"ca": "Què valores més: salari, estabilitat, aprenentatge, flexibilitat o promoció?", "es": "¿Qué valoras más: salario, estabilidad, aprendizaje, flexibilidad o promoción?", "en": "What do you value most: salary, stability, learning, flexibility or promotion?"}},
+        {"id": "company_size", "required": false, "question": {"ca": "Prefereixes una empresa gran, una pime o una startup?", "es": "¿Prefieres una gran empresa, una pyme o una startup?", "en": "Do you prefer a large company, SME or startup?"}},
+        {"id": "team_preference", "required": false, "question": {"ca": "T’agrada treballar individualment o en equip?", "es": "¿Prefieres trabajar individualmente o en equipo?", "en": "Do you prefer working independently or in a team?"}},
+        {"id": "learning_goal", "required": false, "question": {"ca": "Què voldries aprendre en la teva pròxima feina?", "es": "¿Qué te gustaría aprender en tu próximo empleo?", "en": "What would you like to learn in your next job?"}},
+        {"id": "ideal_environment", "required": false, "question": {"ca": "Quin seria el teu entorn de treball ideal?", "es": "¿Cuál sería tu entorno de trabajo ideal?", "en": "What would your ideal work environment be?"}}
+      ]
+    }
+  ]
+}

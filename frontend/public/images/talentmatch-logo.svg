@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">TalentMatch AI</title>
+
+  <defs>
+    <linearGradient id="purple" x1="24" y1="22" x2="103" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C64DFF"/>
+      <stop offset=".52" stop-color="#A100FF"/>
+      <stop offset="1" stop-color="#7800C2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Monograma TM: la barra superior forma la T i els traços inferiors formen la M. -->
+  <path
+    d="M18 24h92v20H74v60H54V44H18V24Z"
+    fill="url(#purple)"
+  />
+  <path
+    d="M25 104V51h19l20 25 20-25h19v53H83V80L64 102 45 80v24H25Z"
+    fill="url(#purple)"
+  />
+
+  <!-- Tall blanc central per separar visualment les dues inicials. -->
+  <path
+    d="M58 44h12v35l-6 8-6-8V44Z"
+    fill="#fff"
+  />
+</svg>
