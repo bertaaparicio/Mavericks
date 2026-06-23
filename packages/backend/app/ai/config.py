@@ -23,8 +23,9 @@ class OllamaSettings:
 
     @classmethod
     def from_env(cls) -> "OllamaSettings":
-        """Build settings with only the model name coming from the environment."""
+        """Build settings from the environment for local or Docker execution."""
 
         return cls(
             model=os.getenv("OLLAMA_MODEL") or DEFAULT_OLLAMA_MODEL,
+            host=os.getenv("OLLAMA_HOST") or DEFAULT_OLLAMA_HOST,
         )

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { useLanguage } from "../context/LanguageContext";
-import { analyzeCv } from "../services/api";
+import { analyzeCv, completeProfile } from "../services/api";
 import { BackButton } from "../components/BackButton";
 import { ProfileChecklist } from "../components/ProfileChecklist";
 import { CvImprovementAudit } from "../components/CvImprovementAudit";
+import { JobMatches } from "../components/JobMatches";
 
 const copy = {
   es: { eyebrow:"PORTAL CANDIDATO",title:"Tu talento merece el match perfecto.",text:"Sube tu currículum y analizaremos tu experiencia, formación y competencias.",drop:"Selecciona o arrastra tu CV",formats:"PDF o DOCX · Máximo 10 MB",button:"Analizar mi CV",loading:"Leyendo el CV...",summary:"Esto es lo que hemos entendido",points:"Puntos clave",skills:"Competencias",languages:"Idiomas",preview:"Texto extraído",error:"Selecciona un PDF o DOCX válido." },
@@ -20,6 +21,7 @@ export function CandidatePage() {
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [plan, setPlan] = useState("free");
 
   async function submit(event) {
     event.preventDefault();
@@ -30,7 +32,21 @@ export function CandidatePage() {
     setLoading(true);
     setMessage("");
     try {
-      setResult(await analyzeCv(file, language));
+      setResult(await analyzeCv(file, language, plan));
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function changePlan(nextPlan) {
+    setPlan(nextPlan);
+    if (!result || !file) return;
+    setLoading(true);
+    setMessage("");
+    try {
+      setResult(await analyzeCv(file, language, nextPlan));
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -47,6 +63,22 @@ export function CandidatePage() {
           <span>{t.eyebrow}</span><h1>{t.title}</h1><p>{t.text}</p>
         </section>
         <form className="upload-panel" onSubmit={submit}>
+          <div className="upload-plan-switch" role="group" aria-label="Plan">
+            <button
+              type="button"
+              className={plan === "free" ? "is-active" : ""}
+              onClick={() => changePlan("free")}
+            >
+              Free
+            </button>
+            <button
+              type="button"
+              className={plan === "pro" ? "is-active" : ""}
+              onClick={() => changePlan("pro")}
+            >
+              PRO
+            </button>
+          </div>
           <label className="upload-zone">
             <strong>{file?.name || t.drop}</strong>
             <small>{t.formats}</small>
@@ -72,11 +104,21 @@ export function CandidatePage() {
               </aside>
             </section>
             {result.checklist && (
-              <ProfileChecklist checklist={result.checklist} language={language} />
+              <ProfileChecklist
+                checklist={result.checklist}
+                language={language}
+                plan={plan}
+                onPlanChange={changePlan}
+                onSaveAnswers={async (answers) => {
+                  const updated = await completeProfile(result.matching_profile, answers);
+                  setResult((current) => ({ ...current, ranked_jobs: updated.ranked_jobs }));
+                }}
+              />
             )}
-            {result.cv_improvement && (
+            {plan === "pro" && result.cv_improvement && (
               <CvImprovementAudit audit={result.cv_improvement} language={language} />
             )}
+            <JobMatches jobs={result.ranked_jobs} language={language} plan={plan} />
           </>
         )}
       </main>

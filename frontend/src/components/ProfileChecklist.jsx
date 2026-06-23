@@ -64,11 +64,17 @@ function displayValue(value) {
 }
 
 /** Visualitza el JSON retornat per l'agent lector i recull les dades que falten. */
-export function ProfileChecklist({ checklist, language }) {
+export function ProfileChecklist({
+  checklist,
+  language,
+  plan = "free",
+  onPlanChange,
+  onSaveAnswers,
+}) {
   const t = copy[language];
-  const [plan, setPlan] = useState("free");
   const [answers, setAnswers] = useState({});
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const visibleSections = useMemo(
     () => checklist.sections.filter((section) => section.plans.includes(plan)),
@@ -88,12 +94,18 @@ export function ProfileChecklist({ checklist, language }) {
     + answeredVisible;
   const total = visibleSections.reduce((sum, section) => sum + section.total, 0);
 
-  function saveAnswers() {
-    localStorage.setItem(
-      `talentmatch-checklist-${plan}`,
-      JSON.stringify({ answers, savedAt: new Date().toISOString() }),
-    );
-    setSaved(true);
+  async function saveAnswers() {
+    setSaving(true);
+    try {
+      if (onSaveAnswers) await onSaveAnswers(answers);
+      localStorage.setItem(
+        `talentmatch-checklist-${plan}`,
+        JSON.stringify({ answers, savedAt: new Date().toISOString() }),
+      );
+      setSaved(true);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -108,14 +120,14 @@ export function ProfileChecklist({ checklist, language }) {
           <button
             className={plan === "free" ? "is-active" : ""}
             type="button"
-            onClick={() => { setPlan("free"); setSaved(false); }}
+            onClick={() => { onPlanChange?.("free"); setSaved(false); }}
           >
             {t.free}
           </button>
           <button
             className={plan === "pro" ? "is-active" : ""}
             type="button"
-            onClick={() => { setPlan("pro"); setSaved(false); }}
+            onClick={() => { onPlanChange?.("pro"); setSaved(false); }}
           >
             {t.pro}
           </button>
@@ -190,7 +202,12 @@ export function ProfileChecklist({ checklist, language }) {
       {requiredPending.length === 0 ? (
         <p className="checklist-complete-message">{t.noQuestions}</p>
       ) : (
-        <button className="button button--candidate checklist-save" type="button" onClick={saveAnswers}>
+        <button
+          className="button button--candidate checklist-save"
+          type="button"
+          onClick={saveAnswers}
+          disabled={saving}
+        >
           {t.save}
         </button>
       )}

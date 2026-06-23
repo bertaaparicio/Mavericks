@@ -148,6 +148,9 @@ class GroqModelClient:
             "stop": stop,
         }
 
+        if request.format == "json":
+            payload["response_format"] = {"type": "json_object"}
+
         # Handle max tokens (omit from payload if not specified to avoid rate limiter limits)
         max_tokens = (
             options.get("max_completion_tokens")

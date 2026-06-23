@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS jobposts (
 );
 """
 
-TRUNCATE_SQL = "TRUNCATE TABLE jobposts;"
+COUNT_SQL = "SELECT COUNT(*) FROM jobposts;"
 
 COPY_SQL = """
 INSERT INTO jobposts (job_title, company_name, location, hiring_status, date, seniority_level, job_function, employment_type, industry)
@@ -55,15 +55,22 @@ def main() -> None:
         with conn.cursor() as cur:
             logger.info("Creating table if not exists...")
             cur.execute(CREATE_TABLE_SQL)
-
-            logger.info("Truncating existing data...")
-            cur.execute(TRUNCATE_SQL)
+            cur.execute(COUNT_SQL)
+            existing_rows = cur.fetchone()[0]
+            if existing_rows:
+                conn.commit()
+                logger.info(
+                    "Database already contains %d job posts; skipping import.",
+                    existing_rows,
+                )
+                return
 
         csv_path = os.path.abspath(CSV_ZIP)
         logger.info("Reading CSV from: %s", csv_path)
 
         if not os.path.exists(csv_path):
             logger.error("CSV zip not found at %s", csv_path)
+            conn.rollback()
             return
 
         with zipfile.ZipFile(csv_path) as z:

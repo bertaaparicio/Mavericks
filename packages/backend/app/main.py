@@ -3,15 +3,19 @@ from __future__ import annotations
 import logging
 import os
 import tempfile
+from pathlib import Path
+from typing import Any
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from app.ai.config import OllamaSettings
 from app.ai.ollama_client import AIModelClient
 from app.ai.schemas import ChatMessage, ChatRequest
 from app.services.database_service import query_jobs_structured
+from app.services.integrated_cv_service import analyze_cv_and_match, match_after_answers
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.profile_parser import parse_cv_profile
 from app.services.qa_service import QAService
@@ -110,6 +114,11 @@ class MatchFromProfileResponse(BaseModel):
     ranked_jobs: list[JobMatchResult]
 
 
+class CompleteProfileRequest(BaseModel):
+    matching_profile: dict[str, Any]
+    answers: dict[str, Any]
+
+
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -130,6 +139,48 @@ async def ai_health() -> dict[str, str | bool]:
         ),
         "fallback_provider": os.getenv("AI_FALLBACK_PROVIDER", "ollama"),
         "api_key_configured": bool(os.getenv("GROQ_API_KEY")),
+    }
+
+
+@app.post("/api/analyze")
+async def integrated_analyze(
+    cv: UploadFile = File(...),
+    language: str = Form("ca"),
+    plan: str = Form("free"),
+) -> dict[str, Any]:
+    """Frontend entrypoint: CV → Groq → checklist → PostgreSQL."""
+
+    filename = cv.filename or "cv.pdf"
+    content = await cv.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="The uploaded CV is empty.")
+
+    try:
+        return await analyze_cv_and_match(
+            filename=filename,
+            content=content,
+            language=language,
+            plan=plan,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Integrated CV analysis failed")
+        raise HTTPException(
+            status_code=502,
+            detail=f"The CV could not be analyzed: {exc}",
+        ) from exc
+
+
+@app.post("/api/profile/complete")
+async def complete_profile(body: CompleteProfileRequest) -> dict[str, Any]:
+    """Rerun job matching after the candidate answers pending questions."""
+
+    return {
+        "ranked_jobs": match_after_answers(
+            matching_profile=body.matching_profile,
+            answers=body.answers,
+        )
     }
 
 
@@ -267,3 +318,28 @@ async def _search_jobs(profile: dict) -> list[JobMatchResult]:
         logger.warning("Database query failed: %s", e)
 
     return jobs
+
+
+def _frontend_root() -> Path | None:
+    candidates = [
+        Path(__file__).resolve().parents[3] / "frontend" / "dist",
+        Path("/app/frontend/dist"),
+    ]
+    return next((candidate for candidate in candidates if candidate.is_dir()), None)
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_frontend(full_path: str) -> FileResponse:
+    """Serve the React build while preserving all existing API endpoints."""
+
+    frontend_root = _frontend_root()
+    if frontend_root is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Frontend not built. Run npm.cmd run build inside frontend.",
+        )
+
+    requested = (frontend_root / full_path).resolve()
+    if frontend_root.resolve() in requested.parents and requested.is_file():
+        return FileResponse(requested)
+    return FileResponse(frontend_root / "index.html")
