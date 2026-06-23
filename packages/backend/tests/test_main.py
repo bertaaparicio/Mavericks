@@ -14,7 +14,7 @@ client = TestClient(TestClient)
     match_score=50, match_ratio=100.0,
     model_dump=lambda: {"job_title": "Engineer", "match_ratio": 100.0},
 )])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_health_endpoint(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -25,7 +25,7 @@ def test_health_endpoint(mock_ollama: MagicMock, mock_search: MagicMock) -> None
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_match_cv_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -35,7 +35,7 @@ def test_match_cv_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> Non
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_cv_qa_init_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -45,7 +45,7 @@ def test_cv_qa_init_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> N
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_cv_qa_answer_no_session(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -55,7 +55,7 @@ def test_cv_qa_answer_no_session(mock_ollama: MagicMock, mock_search: MagicMock)
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_cv_qa_status_not_found(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -65,7 +65,7 @@ def test_cv_qa_status_not_found(mock_ollama: MagicMock, mock_search: MagicMock) 
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_cors_headers(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -82,7 +82,7 @@ def test_cors_headers(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
 
 
 @patch("app.main._search_jobs", return_value=[])
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_match_from_profile_empty(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
 
@@ -93,7 +93,7 @@ def test_match_from_profile_empty(mock_ollama: MagicMock, mock_search: MagicMock
 
 
 @patch("app.main._search_jobs")
-@patch("app.main.OllamaModelClient")
+@patch("app.main.AIModelClient")
 def test_match_from_profile_with_params(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import JobMatchResult
 

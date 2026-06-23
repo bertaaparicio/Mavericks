@@ -12,6 +12,7 @@ dependencies = [
     "PyPDF2>=3.0",
     "psycopg2-binary>=2.9",
     "python-multipart>=0.0.9",
+    "groq>=1.5.0",
 ]
 
 [project.optional-dependencies]

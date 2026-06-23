@@ -1,8 +1,25 @@
-
 # python
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+server/downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
 # mypy
 .mypy_cache/
@@ -21,5 +38,5 @@ tmp/
 env/
 venv/
 .pytest_cache/
-frontend/node_modules/
-frontend/dist/
+
+**/node_modules
