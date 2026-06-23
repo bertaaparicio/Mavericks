@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.ai.config import OllamaSettings
-from app.ai.ollama_client import OllamaModelClient
+from app.ai.ollama_client import AIModelClient
 from app.ai.schemas import ChatMessage, ChatRequest
 from app.services.database_service import query_jobs_structured
 from app.services.pdf_service import extract_text_from_pdf
@@ -138,7 +138,7 @@ async def match_cv(file: UploadFile = File(...)) -> MatchResponse:
     logger.info("Extracted %d characters from CV", len(cv_text))
 
     settings = OllamaSettings.from_env()
-    async with OllamaModelClient(settings=settings) as client:
+    async with AIModelClient(settings=settings) as client:
         response = await client.chat(ChatRequest(
             messages=[ChatMessage(role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text))],
         ))

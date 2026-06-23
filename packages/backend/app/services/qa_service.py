@@ -6,7 +6,7 @@ import uuid
 from typing import Any
 
 from app.ai.config import OllamaSettings
-from app.ai.ollama_client import OllamaModelClient
+from app.ai.ollama_client import AIModelClient
 from app.ai.schemas import ChatMessage, ChatRequest
 
 logger = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ class QAService:
     def __init__(self) -> None:
         self.sessions: dict[str, QASession] = {}
         settings = OllamaSettings.from_env()
-        self.client = OllamaModelClient(settings=settings)
+        self.client = AIModelClient(settings=settings)
 
     async def init_session(self, cv_text: str) -> QASession:
         session = QASession(cv_text)

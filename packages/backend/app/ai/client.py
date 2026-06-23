@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from collections.abc import AsyncIterator, Iterable
 from typing import Any
 
@@ -26,8 +27,8 @@ _BASE_DELAY = 1.0
 _MAX_DELAY = 10.0
 
 
-class OllamaModelClient:
-    """Thin application wrapper around the official Ollama async client."""
+class AIModelClient:
+    """Async model client supporting Ollama with seamless Groq fallback."""
 
     def __init__(
         self,
@@ -42,32 +43,73 @@ class OllamaModelClient:
             host=self.settings.host,
             timeout=self.settings.timeout,
         )
+        self._groq_client: Any | None = None
 
-    async def __aenter__(self) -> "OllamaModelClient":
+    def _get_groq_client(self) -> Any | None:
+        if self._groq_client is None:
+            from app.ai.groq_client import GroqModelClient
+            api_key = os.getenv("GROQ_API_KEY")
+            if api_key:
+                self._groq_client = GroqModelClient(api_key=api_key)
+            else:
+                logger.warning("Groq API key not found in environment; fallback to Groq will be disabled.")
+        return self._groq_client
+
+    async def __aenter__(self) -> "AIModelClient":
         return self
 
     async def __aexit__(self, *_: object) -> None:
         await self.close()
 
     async def close(self) -> None:
+        if self._groq_client is not None:
+            close = getattr(self._groq_client, "close", None)
+            if close is not None:
+                try:
+                    await close()
+                except TypeError:
+                    if callable(close):
+                        close()
+
         if not self._owns_client:
             return
 
         close = getattr(self._client, "aclose", None)
         if close is not None:
-            await close()
+            try:
+                await close()
+            except TypeError:
+                if callable(close):
+                    close()
             return
 
         raw_client = getattr(self._client, "_client", None)
         raw_close = getattr(raw_client, "aclose", None)
         if raw_close is not None:
-            await raw_close()
+            try:
+                await raw_close()
+            except TypeError:
+                if callable(raw_close):
+                    raw_close()
 
     async def chat(
         self,
         request: ChatRequest,
     ) -> ModelResponse:
-        return await self._with_retry(self._chat, request)
+        try:
+            return await self._with_retry(self._chat, request)
+        except OllamaModelError as exc:
+            logger.warning("Ollama chat failed: %s. Falling back to Groq...", exc)
+            groq_client = self._get_groq_client()
+            if groq_client:
+                try:
+                    return await groq_client.chat(request)
+                except Exception as groq_exc:
+                    logger.error("Groq fallback chat failed: %s", groq_exc)
+                    raise OllamaModelError(
+                        f"Ollama failed ({exc}) and Groq fallback failed ({groq_exc})"
+                    ) from exc
+            raise exc
 
     async def _chat(self, request: ChatRequest) -> ModelResponse:
         try:
@@ -89,6 +131,7 @@ class OllamaModelClient:
         self,
         request: ChatRequest,
     ) -> AsyncIterator[str]:
+        use_fallback = False
         try:
             stream = await self._client.chat(
                 **self._chat_payload(request),
@@ -101,13 +144,42 @@ class OllamaModelClient:
                 if content:
                     yield content
         except _OLLAMA_EXCEPTIONS as exc:
-            raise OllamaModelError(str(exc)) from exc
+            logger.warning("Ollama stream_chat failed: %s. Falling back to Groq...", exc)
+            use_fallback = True
+            fallback_exc = exc
+
+        if use_fallback:
+            groq_client = self._get_groq_client()
+            if groq_client:
+                try:
+                    async for chunk in groq_client.stream_chat(request):
+                        yield chunk
+                except Exception as groq_exc:
+                    logger.error("Groq fallback stream_chat failed: %s", groq_exc)
+                    raise OllamaModelError(
+                        f"Ollama failed ({fallback_exc}) and Groq fallback failed ({groq_exc})"
+                    ) from fallback_exc
+            else:
+                raise OllamaModelError(str(fallback_exc)) from fallback_exc
 
     async def generate(
         self,
         request: GenerateRequest,
     ) -> ModelResponse:
-        return await self._with_retry(self._generate, request)
+        try:
+            return await self._with_retry(self._generate, request)
+        except OllamaModelError as exc:
+            logger.warning("Ollama generate failed: %s. Falling back to Groq...", exc)
+            groq_client = self._get_groq_client()
+            if groq_client:
+                try:
+                    return await groq_client.generate(request)
+                except Exception as groq_exc:
+                    logger.error("Groq fallback generate failed: %s", groq_exc)
+                    raise OllamaModelError(
+                        f"Ollama failed ({exc}) and Groq fallback failed ({groq_exc})"
+                    ) from exc
+            raise exc
 
     async def _generate(self, request: GenerateRequest) -> ModelResponse:
         try:
@@ -127,6 +199,7 @@ class OllamaModelClient:
         self,
         request: GenerateRequest,
     ) -> AsyncIterator[str]:
+        use_fallback = False
         try:
             stream = await self._client.generate(
                 **self._generate_payload(request),
@@ -138,7 +211,23 @@ class OllamaModelClient:
                 if content:
                     yield content
         except _OLLAMA_EXCEPTIONS as exc:
-            raise OllamaModelError(str(exc)) from exc
+            logger.warning("Ollama stream_generate failed: %s. Falling back to Groq...", exc)
+            use_fallback = True
+            fallback_exc = exc
+
+        if use_fallback:
+            groq_client = self._get_groq_client()
+            if groq_client:
+                try:
+                    async for chunk in groq_client.stream_generate(request):
+                        yield chunk
+                except Exception as groq_exc:
+                    logger.error("Groq fallback stream_generate failed: %s", groq_exc)
+                    raise OllamaModelError(
+                        f"Ollama failed ({fallback_exc}) and Groq fallback failed ({groq_exc})"
+                    ) from fallback_exc
+            else:
+                raise OllamaModelError(str(fallback_exc)) from fallback_exc
 
     async def list_models(self) -> list[dict[str, Any]]:
         try:
@@ -226,3 +315,7 @@ def _to_dict(value: Any) -> dict[str, Any]:
         return value.model_dump()
 
     return dict(value)
+
+
+# Backward-compatible alias
+OllamaModelClient = AIModelClient

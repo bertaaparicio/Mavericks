@@ -19,7 +19,7 @@ if str(_backend_dir) not in sys.path:
     sys.path.insert(0, str(_backend_dir))
 
 from app.ai.config import OllamaSettings
-from app.ai.ollama_client import OllamaModelClient
+from app.ai.ollama_client import AIModelClient
 from app.ai.schemas import ChatMessage, ChatRequest
 from app.services.database_service import query_jobs_structured
 from app.services.pdf_service import extract_text_from_pdf
@@ -60,7 +60,7 @@ async def analyze_cv(cv_text: str, model: str | None = None) -> str:
     if model:
         settings = OllamaSettings(model=model, host=settings.host, timeout=settings.timeout, keep_alive=settings.keep_alive)
     logger.info("Sending CV to Ollama (model=%s, %d chars)...", settings.model, len(cv_text))
-    async with OllamaModelClient(settings=settings) as client:
+    async with AIModelClient(settings=settings) as client:
         response = await client.chat(ChatRequest(
             messages=[ChatMessage(role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text))],
         ))

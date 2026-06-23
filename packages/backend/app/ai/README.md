@@ -1,20 +1,20 @@
 # AI Module
 
-Reusable helpers for querying a local Ollama model
+Reusable async helpers for querying AI models
+
+If local Ollama service is unavailable the client automatically uses Groq for inference.
 
 ## Model Configuration
 
 ```bash
 OLLAMA_MODEL=gpt-oss:20b
+GROQ_MODEL=openai/gpt-oss-20b
+GROQ_API_KEY=your_key_here
 ```
 
-## Defaults
+## (optional) If using Ollama
 
-- host: `http://localhost:11434`
-- timeout: `60`
-- keep alive: `5m`
-
-Make sure Ollama is running and the model is available:
+Make sure Ollama is running and the model is available if you wish to use local inference:
 
 ```bash
 ollama serve
@@ -24,11 +24,11 @@ ollama pull gpt-oss:20b
 ## Usage
 
 ```python
-from app.ai import ChatMessage, ChatRequest, OllamaModelClient
+from app.ai import ChatMessage, ChatRequest, AIModelClient
 
 
 async def ask_model(question: str) -> str:
-    async with OllamaModelClient() as client:
+    async with AIModelClient() as client:
         response = await client.chat(
             ChatRequest(
                 system="Answer clearly and concisely.",
@@ -46,11 +46,11 @@ async def ask_model(question: str) -> str:
 Use `generate` for a single prompt without chat history.
 
 ```python
-from app.ai import GenerateRequest, OllamaModelClient
+from app.ai import GenerateRequest, AIModelClient
 
 
 async def generate_summary(text: str) -> str:
-    async with OllamaModelClient() as client:
+    async with AIModelClient() as client:
         response = await client.generate(
             GenerateRequest(
                 prompt=f"Summarize this text:\n\n{text}",
@@ -64,11 +64,11 @@ async def generate_summary(text: str) -> str:
 ## Streaming
 
 ```python
-from app.ai import ChatMessage, ChatRequest, OllamaModelClient
+from app.ai import ChatMessage, ChatRequest, AIModelClient
 
 
 async def stream_answer(question: str):
-    async with OllamaModelClient() as client:
+    async with AIModelClient() as client:
         request = ChatRequest(
             messages=[ChatMessage(role="user", content=question)],
         )
@@ -79,15 +79,15 @@ async def stream_answer(question: str):
 
 ## Error Handling
 
-All Ollama request and connection failures are wrapped in `OllamaModelError`.
+All AI request and connection failures are wrapped in `OllamaModelError`.
 
 ```python
-from app.ai import ChatMessage, ChatRequest, OllamaModelClient, OllamaModelError
+from app.ai import ChatMessage, ChatRequest, AIModelClient, OllamaModelError
 
 
 async def safe_ask(question: str) -> str:
     try:
-        async with OllamaModelClient() as client:
+        async with AIModelClient() as client:
             response = await client.chat(
                 ChatRequest(messages=[ChatMessage(role="user", content=question)])
             )
@@ -103,10 +103,10 @@ Prefer one app-lifetime client for endpoints, then close it during application
 shutdown.
 
 ```python
-from app.ai import ChatMessage, ChatRequest, OllamaModelClient
+from app.ai import ChatMessage, ChatRequest, AIModelClient
 
 
-ai_client = OllamaModelClient()
+ai_client = AIModelClient()
 
 
 async def endpoint_handler(prompt: str) -> dict[str, str]:
