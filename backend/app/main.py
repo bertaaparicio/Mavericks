@@ -321,8 +321,12 @@ async def _search_jobs(profile: dict) -> list[JobMatchResult]:
 
 
 def _frontend_root() -> Path | None:
+    # Try a few likely locations for the compiled frontend. Use a safe parent index
+    # so this works whether the package is nested or placed at /app.
+    p = Path(__file__).resolve()
+    parent_index = 2 if len(p.parents) > 2 else len(p.parents) - 1
     candidates = [
-        Path(__file__).resolve().parents[3] / "frontend" / "dist",
+        p.parents[parent_index] / "frontend" / "dist",
         Path("/app/frontend/dist"),
     ]
     return next((candidate for candidate in candidates if candidate.is_dir()), None)

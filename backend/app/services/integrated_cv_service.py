@@ -19,37 +19,37 @@ logger = logging.getLogger(__name__)
 PROFILE_PROMPT = """You are TalentMatch AI's CV analysis agent.
 
 Analyze the CV and return ONLY one valid JSON object:
-{
-  "matching_profile": {
+{{
+  "matching_profile": {{
     "job_title_keywords": ["..."],
     "seniority_level": "...",
     "location": "...",
     "job_function": "...",
     "industry": "...",
     "employment_type": "..."
-  },
-  "candidate_fields": {
-    "identity.current_location": {"value": "...", "confidence": 0.0},
-    "identity.preferred_workday": {"value": "...", "confidence": 0.0},
-    "professional_profile.primary_role": {"value": "...", "confidence": 0.0},
-    "professional_profile.years_experience": {"value": "...", "confidence": 0.0},
-    "professional_profile.seniority": {"value": "...", "confidence": 0.0},
-    "professional_profile.sectors": {"value": "...", "confidence": 0.0},
-    "professional_profile.main_responsibilities": {"value": ["..."], "confidence": 0.0},
-    "skills.technical_skills": {"value": ["..."], "confidence": 0.0},
-    "skills.tools": {"value": ["..."], "confidence": 0.0},
-    "skills.soft_skills": {"value": ["..."], "confidence": 0.0},
-    "skills.certifications": {"value": ["..."], "confidence": 0.0},
-    "education.highest_level": {"value": "...", "confidence": 0.0},
-    "education.degrees": {"value": ["..."], "confidence": 0.0},
-    "education.education_center": {"value": "...", "confidence": 0.0},
-    "education.specialization": {"value": "...", "confidence": 0.0},
-    "education.graduation_date": {"value": "...", "confidence": 0.0},
-    "education.ongoing_education": {"value": "...", "confidence": 0.0},
-    "languages.languages": {"value": ["..."], "confidence": 0.0},
-    "languages.language_levels": {"value": ["..."], "confidence": 0.0}
-  }
-}
+  }},
+  "candidate_fields": {{
+    "identity.current_location": {{"value": "...", "confidence": 0.0}},
+    "identity.preferred_workday": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.primary_role": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.years_experience": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.seniority": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.sectors": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.main_responsibilities": {{"value": ["..."], "confidence": 0.0}},
+    "skills.technical_skills": {{"value": ["..."], "confidence": 0.0}},
+    "skills.tools": {{"value": ["..."], "confidence": 0.0}},
+    "skills.soft_skills": {{"value": ["..."], "confidence": 0.0}},
+    "skills.certifications": {{"value": ["..."], "confidence": 0.0}},
+    "education.highest_level": {{"value": "...", "confidence": 0.0}},
+    "education.degrees": {{"value": ["..."], "confidence": 0.0}},
+    "education.education_center": {{"value": "...", "confidence": 0.0}},
+    "education.specialization": {{"value": "...", "confidence": 0.0}},
+    "education.graduation_date": {{"value": "...", "confidence": 0.0}},
+    "education.ongoing_education": {{"value": "...", "confidence": 0.0}},
+    "languages.languages": {{"value": ["..."], "confidence": 0.0}},
+    "languages.language_levels": {{"value": ["..."], "confidence": 0.0}}
+  }}
+}}
 
 Rules:
 - Omit fields whose answer is not present or strongly supported by the CV.
@@ -113,8 +113,18 @@ def match_after_answers(
     profile = dict(matching_profile)
     desired_role = answers.get("career_goal.desired_role")
     primary_role = answers.get("professional_profile.primary_role")
-    if desired_role or primary_role:
-        profile["job_title_keywords"] = _as_list(desired_role or primary_role)
+
+    # if desired_role or primary_role:
+    #     profile["job_title_keywords"] = _as_list(desired_role or primary_role)
+
+    # Combinar las keywords originales con las nuevas respuestas del usuario
+    old_keywords = profile.get("job_title_keywords") or []
+    new_keywords = _as_list(desired_role or primary_role) or []
+    
+    # Unir ambas listas y quitar duplicados usando set()
+    combined = list(set(old_keywords + new_keywords))
+    if combined:
+        profile["job_title_keywords"] = combined
 
     profile["seniority_level"] = (
         answers.get("professional_profile.seniority")

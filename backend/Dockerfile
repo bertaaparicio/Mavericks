@@ -15,12 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY packages/backend/pyproject.toml .
-RUN pip install --no-cache-dir .
-
-COPY packages/backend/app ./app
 COPY backend ./backend
-COPY packages/backend/scripts ./packages/backend/scripts
+COPY backend/pyproject.toml ./backend/pyproject.toml
+RUN pip install --no-cache-dir ./backend
+
+COPY backend/app ./app
+COPY backend/scripts ./scripts
 COPY data ./data
 COPY --from=frontend-build /frontend/dist ./frontend/dist
 

@@ -17,8 +17,8 @@ DB_CONFIG = {
     "port": os.getenv("DB_PORT", "5432"),
 }
 
-SCORE_FIELD_MATCH = 10
-SCORE_KEYWORD_MATCH = 5
+SCORE_FIELD_MATCH = 5
+SCORE_KEYWORD_MATCH = 15
 RESULT_LIMIT = 10
 
 
@@ -82,8 +82,11 @@ class DatabaseConnection:
         if job_title_keywords:
             or_conds = []
             for kw in job_title_keywords:
-                or_conds.append("job_title ILIKE %s")
-                values.append(f"%{kw}%")
+                # or_conds.append("job_title ILIKE %s")
+                # values.append(f"%{kw}%")
+                # Ahora busca la palabra clave en el título, en la función y en la industria
+                or_conds.append("(job_title ILIKE %s OR job_function ILIKE %s OR industry ILIKE %s)")
+                values.extend([f"%{kw}%", f"%{kw}%", f"%{kw}%"])                
             where_clauses.append("(" + " OR ".join(or_conds) + ")")
 
         if not where_clauses:
@@ -156,6 +159,11 @@ class DatabaseConnection:
                 for kw in job_title_keywords:
                     if kw.lower() in title_lower:
                         score += SCORE_KEYWORD_MATCH
+                    else:
+                        # Si no, busca palabras sueltas (ej: "Data" en "Data Scientist")
+                        for word in kw.split():
+                            if len(word) > 3 and word.lower() in title_lower:
+                                score += (SCORE_KEYWORD_MATCH / 2) # Puntos parciales                        
 
             if seniority_level:
                 sl = (row.get("seniority_level") or "").lower()

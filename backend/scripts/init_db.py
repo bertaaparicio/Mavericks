@@ -22,7 +22,7 @@ DB_CONFIG = {
 }
 
 CSV_ZIP = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "data", "linkedin_job_posts_insights.zip"
+    os.path.dirname(__file__), "..", "..", "data", "linkedin_job_posts_insights.zip"
 )
 
 CREATE_TABLE_SQL = """

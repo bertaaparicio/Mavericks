@@ -1,3 +1,10 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app", "config", "services", "scripts"]
+
 [project]
 name = "server"
 version = "0.0.0"
