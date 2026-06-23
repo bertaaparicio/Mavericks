@@ -24,6 +24,23 @@ const translations = {
       benefits: ["Recibe solo candidatos con >80% de compatibilidad real.", "Reduce el tiempo de contratación en un 70%.", "Accede a un ranking justificado por IA, no por palabras clave."],
       cta: "Ver Solución para RRHH", micro: "Prueba gratuita para equipos de contratación.",
     },
+    howTitle: "¿Cómo funciona TalentMatch AI?",
+    howCandidate: {
+      label: "PARA PERSONAS",
+      steps: [
+        ["01", "Sube tu CV", "Carga tu currículum en PDF o DOCX. Nuestra IA extrae automáticamente tus habilidades, experiencia y formación."],
+        ["02", "Compara con ofertas", "Pega o selecciona una oferta de trabajo. El sistema cruza tu perfil con los requisitos y calcula tu % de encaje real."],
+        ["03", "Mejora tu perfil", "Recibe un informe detallado con las skills que te faltan y recursos concretos para conseguirlas."],
+      ]
+    },
+    howCompany: {
+      label: "PARA EMPRESAS",
+      steps: [
+        ["01", "Publica tu oferta", "Define el puesto con sus requisitos Must Have y Nice to Have. El sistema lo procesa automáticamente."],
+        ["02", "Ranking automático", "Recibe un ranking de candidatos ordenado por compatibilidad real, con explicación de cada puntuación."],
+        ["03", "Contrata más rápido", "Reduce el tiempo de selección hasta un 70% enfocándote solo en los candidatos que realmente encajan."],
+      ]
+    },
     trustTitle: "Tecnología transparente y ética.",
     trust: [["Privacidad Total", "Tus datos no se venden. Procesamiento seguro."], ["IA Explicable", "Te decimos el porqué de cada recomendación."], ["Sin Sesgos", "Algoritmos auditados para priorizar el mérito."]],
   },
@@ -37,6 +54,7 @@ const translations = {
     choose: "Tria com vols utilitzar TalentMatch AI",
     candidate: { label:"PER A PERSONES",title:"Busco feina",pain:"Cansat d’enviar CVs al buit i no rebre resposta?",benefits:["Descobreix el teu % real d’encaix abans d’aplicar.","Optimitza el teu CV automàticament per a cada oferta.","Rep un pla personalitzat per millorar el teu perfil."],cta:"Començar gratis",micro:"Uneix-te a milers de candidats que ja estan aconseguint entrevistes." },
     company: { label:"PER A EMPRESES",title:"Soc empresa o reclutador",pain:"Perds hores filtrant CVs que no encaixen?",benefits:["Rep només candidats amb >80% de compatibilitat real.","Redueix el temps de contractació en un 70%.","Accedeix a un rànquing justificat per IA, no per paraules clau."],cta:"Veure solució per a RRHH",micro:"Prova gratuïta per a equips de contractació." },
+    howTitle: "Com funciona TalentMatch AI?", howCandidate: {label: "PER A PERSONES",steps: [["01", "Puja el teu CV", "Carrega el teu currículum en PDF o DOCX. La nostra IA extrau automàticament les teves habilitats, experiència i formació."],["02", "Compara amb ofertes", "Enganxa o selecciona una oferta de feina. El sistema creua el teu perfil amb els requisits i calcula el teu % d'encaix real."],["03", "Millora el teu perfil", "Rep un informe detallat amb les skills que et falten i recursos concrets per aconseguir-les."],]},howCompany: {label: "PER A EMPRESES",steps: [["01", "Publica la teva oferta", "Defineix el lloc amb els seus requisits Must Have i Nice to Have. El sistema ho processa automàticament."],["02", "Rànquing automàtic", "Rep un rànquing de candidats ordenat per compatibilitat real, amb l'explicació de cada puntuació."],["03", "Contracta més ràpid", "Redueix el temps de selecció fins a un 70% centrant-te només en els candidats que realment encaixen."],]},
     trustTitle:"Tecnologia transparent i ètica.",trust:[["Privacitat total","Les teves dades no es venen. Processament segur."],["IA explicable","T’expliquem el perquè de cada recomanació."],["Sense biaixos","Algoritmes auditats per prioritzar el mèrit."]],
   },
   en: {
@@ -49,6 +67,7 @@ const translations = {
     choose: "Choose how you want to use TalentMatch AI",
     candidate: { label:"FOR PEOPLE",title:"I’m looking for work",pain:"Tired of sending résumés into a void and hearing nothing back?",benefits:["See your real match percentage before applying.","Automatically optimize your résumé for each job.","Get a personal plan to strengthen your profile."],cta:"Start Free",micro:"Join thousands of candidates already landing interviews." },
     company: { label:"FOR COMPANIES",title:"I’m a company or recruiter",pain:"Losing hours filtering résumés that do not fit?",benefits:["Receive only candidates with >80% real compatibility.","Reduce hiring time by 70%.","Access an AI-justified ranking, not a keyword filter."],cta:"See the HR Solution",micro:"Free trial for hiring teams." },
+    howTitle: "How does TalentMatch AI work?",howCandidate: {label: "FOR INDIVIDUALS",steps: [ ["01", "Upload your CV", "Upload your resume in PDF or DOCX. Our AI automatically extracts your skills, experience, and education."],["02", "Compare with job offers", "Paste or select a job offer. The system cross-references your profile with the requirements and calculates your real match %."],["03", "Improve your profile", "Receive a detailed report with the skills you're missing and concrete resources to acquire them."],]},howCompany: {label: "FOR COMPANIES",steps: [["01", "Post your job offer", "Define the position with its Must Have and Nice to Have requirements. The system processes it automatically."],["02", "Automatic ranking", "Receive a ranked list of candidates sorted by real compatibility, with an explanation for each score."],["03", "Hire faster", "Reduce screening time by up to 70% by focusing only on candidates who truly fit."],]},
     trustTitle:"Transparent and ethical technology.",trust:[["Total privacy","Your data is never sold. Secure processing."],["Explainable AI","We explain the reason behind every recommendation."],["Without bias","Audited algorithms prioritize merit."]],
   },
 };
@@ -92,7 +111,44 @@ export function HomePage() {
           </a>
         </section>
 
-        <section className="trust" id="como-funciona">
+        <section className="how-it-works" id="como-funciona">
+          <div className="container">
+            <h2>{t.howTitle}</h2>
+            <div className="how-it-works__grid">
+
+              {/* Columna candidatos */}
+              <div className="how-it-works__col">
+                <span className="how-it-works__tag how-it-works__tag--candidate">{t.howCandidate.label}</span>
+                {t.howCandidate.steps.map(([num, title, text]) => (
+                  <div className="how-it-works__step" key={num}>
+                    <span className="how-it-works__num">{num}</span>
+                    <div>
+                      <h3>{title}</h3>
+                      <p>{text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Columna empresas */}
+              <div className="how-it-works__col">
+                <span className="how-it-works__tag how-it-works__tag--company">{t.howCompany.label}</span>
+                {t.howCompany.steps.map(([num, title, text]) => (
+                  <div className="how-it-works__step" key={num}>
+                    <span className="how-it-works__num">{num}</span>
+                    <div>
+                      <h3>{title}</h3>
+                      <p>{text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+        </section>
+        
+        <section className="trust" id="confianza">
           <div className="container">
             <h2>{t.trustTitle}</h2>
             <div className="trust__grid">

@@ -541,6 +541,57 @@ img { display: block; max-width: 100%; }
   .cv-audit__heading { flex-direction: column; }
 }
 
+.how-it-works {
+  padding: 5rem 0;
+  background: var(--color-surface, #f9f9f9);
+}
+
+.how-it-works h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2rem;
+}
+
+.how-it-works__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+@media (max-width: 768px) {
+  .how-it-works__grid { grid-template-columns: 1fr; }
+}
+
+.how-it-works__tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+}
+
+.how-it-works__tag--candidate { background: #e0f2fe; color: #0369a1; }
+.how-it-works__tag--company   { background: #f0fdf4; color: #15803d; }
+
+.how-it-works__step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.how-it-works__num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary, #6366f1);
+  min-width: 3rem;
+  line-height: 1;
+}
+
+.how-it-works__step h3 { margin: 0 0 0.4rem; font-size: 1.1rem; }
+.how-it-works__step p  { margin: 0; color: var(--color-text-muted, #666); font-size: 0.95rem; }
+
 /* Respeta la preferencia del sistema para reducir movimiento. */
 @media (prefers-reduced-motion: reduce) {
   .audience-card__animated-image,
