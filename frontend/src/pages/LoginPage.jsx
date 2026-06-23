@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { BackButton } from "../components/BackButton";
 import { useLanguage } from "../context/LanguageContext";
+import { useNavigate } from "react-router-dom";
 
 const translations = {
   es: {
@@ -91,6 +92,7 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const navigate = useNavigate();
 
   function submit(event) {
     event.preventDefault();
@@ -113,8 +115,17 @@ export function LoginPage() {
     setMessage("");
     window.setTimeout(() => {
       setLoading(false);
-      setMessage(t.demoSuccess);
-      setMessageType("success");
+      // Guardar sesión
+      localStorage.setItem("talentmatch-user", JSON.stringify({ 
+        role: accountType,  // "candidate" o "company"
+        email: email 
+      }));
+      // Redirigir según tipo de cuenta
+      if (accountType === "candidate") {
+        navigate("/candidate");
+      } else {
+        navigate("/company");
+      }
     }, 650);
   }
 

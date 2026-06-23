@@ -1,18 +1,24 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
 import { LanguageSelector } from "./LanguageSelector";
 
 const labels = {
-  ca: { how: "Com funciona", pricing: "Preus", login: "Login", company: "Accés empreses" },
-  es: { how: "Cómo funciona", pricing: "Precios", login: "Login", company: "Acceso Empresas" },
-  en: { how: "How it works", pricing: "Pricing", login: "Login", company: "Company access" },
+  ca: { how: "Com funciona", pricing: "Preus", login: "Login", logout: "Tancar sessió", company: "Accés empreses" },
+  es: { how: "Cómo funciona", pricing: "Precios", login: "Login", logout: "Cerrar sesión", company: "Acceso Empresas" },
+  en: { how: "How it works", pricing: "Pricing", login: "Login", logout: "Log out", company: "Company access" },
 };
 
-/** Header compartido y consistente en todas las páginas de la aplicación. */
 export function Header({ language, portal }) {
   const t = labels[language];
   const { pathname, hash } = useLocation();
+  const navigate = useNavigate();
   const isHowActive = pathname === "/" && hash === "#como-funciona";
+  const isLoggedIn = localStorage.getItem("talentmatch-user");
+
+  function handleLogout() {
+    localStorage.removeItem("talentmatch-user");
+    navigate("/login");
+  }
 
   return (
     <header className="site-header">
@@ -25,7 +31,6 @@ export function Header({ language, portal }) {
         >
           {t.how}
         </Link>
-
         <Link
           className={pathname === "/pricing" ? "nav-link is-active" : "nav-link"}
           to="/pricing"
@@ -34,23 +39,32 @@ export function Header({ language, portal }) {
           {t.pricing}
         </Link>
 
-        <Link
-          className={pathname === "/login" ? "nav-link is-active" : "nav-link"}
-          to="/login"
-          aria-current={pathname === "/login" ? "page" : undefined}
-        >
-          {t.login}
-        </Link>
+        {isLoggedIn ? (
+          <button className="nav-link" onClick={handleLogout}>
+            {t.logout}
+          </button>
+        ) : (
+          <Link
+            className={pathname === "/login" ? "nav-link is-active" : "nav-link"}
+            to="/login"
+            aria-current={pathname === "/login" ? "page" : undefined}
+          >
+            {t.login}
+          </Link>
+        )}
 
         <LanguageSelector />
 
-        <Link
-          className={`button button--outline${pathname === "/company" ? " is-active" : ""}`}
-          to="/company"
-          aria-current={pathname === "/company" ? "page" : undefined}
-        >
-          {t.company}
-        </Link>
+        {/* Botón de empresas solo visible si NO está logueado */}
+        {!isLoggedIn && (
+          <Link
+            className={`button button--outline${pathname === "/company" ? " is-active" : ""}`}
+            to="/company"
+            aria-current={pathname === "/company" ? "page" : undefined}
+          >
+            {t.company}
+          </Link>
+        )}
       </nav>
     </header>
   );
