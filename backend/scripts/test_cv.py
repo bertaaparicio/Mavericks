@@ -5,6 +5,8 @@ Usage:
     python scripts/test_cv.py /path/to/cv.pdf --model llama2:latest
 """
 
+# ruff: noqa: E402
+
 from __future__ import annotations
 
 import argparse
@@ -13,7 +15,7 @@ import logging
 import sys
 from pathlib import Path
 
-# Ensure app package is importable when run from packages/backend/
+# Ensure app package is importable when run from backend/
 _backend_dir = Path(__file__).resolve().parent.parent
 if str(_backend_dir) not in sys.path:
     sys.path.insert(0, str(_backend_dir))
