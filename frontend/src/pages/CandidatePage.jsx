@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Header } from "../components/Header";
+import { BackButton } from "../components/BackButton";
+import { CvImprovementAudit } from "../components/CvImprovementAudit";
 import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { JobMatches } from "../components/JobMatches";
+import { ProfileChecklist } from "../components/ProfileChecklist";
 import { useLanguage } from "../context/LanguageContext";
 import { analyzeCv, completeProfile } from "../services/api";
-import { BackButton } from "../components/BackButton";
-import { ProfileChecklist } from "../components/ProfileChecklist";
-import { CvImprovementAudit } from "../components/CvImprovementAudit";
-import { JobMatches } from "../components/JobMatches";
 
 const copy = {
   es: { eyebrow:"PORTAL CANDIDATO",title:"Tu talento merece el match perfecto.",text:"Sube tu currículum y analizaremos tu experiencia, formación y competencias.",drop:"Selecciona o arrastra tu CV",formats:"PDF o DOCX · Máximo 10 MB",button:"Analizar mi CV",loading:"Leyendo el CV...",summary:"Esto es lo que hemos entendido",points:"Puntos clave",skills:"Competencias",languages:"Idiomas",preview:"Texto extraído",error:"Selecciona un PDF o DOCX válido." },
@@ -56,7 +56,7 @@ export function CandidatePage() {
 
   return (
     <div className="portal portal--candidate">
-      <Header language={language} portal="candidate" />
+      <Header portal="candidate" />
       <main className="portal-main">
         <BackButton language={language} />
         <section className="portal-intro">
@@ -122,7 +122,7 @@ export function CandidatePage() {
           </>
         )}
       </main>
-      <Footer language={language} />
+      <Footer />
     </div>
   );
 }

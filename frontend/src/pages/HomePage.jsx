@@ -1,6 +1,6 @@
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
 import { AudienceCard } from "../components/AudienceCard";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { useLanguage } from "../context/LanguageContext";
 
 const translations = {
@@ -13,13 +13,13 @@ const translations = {
     subtitle: "Optimizamos la búsqueda de empleo para candidatos y aceleramos la contratación para empresas. Sin sesgos, sin pérdida de tiempo, 100% basado en datos.",
     choose: "Elige cómo quieres usar TalentMatch AI",
     candidate: {
-      label: "PARA PERSONAS", title: "Busco Empleo",
+      label: "PARA PERSONAS", title: "Encuentra tu próximo empleo",
       pain: "¿Cansado de enviar CVs al vacío y no recibir respuesta?",
       benefits: ["Descubre tu % real de encaje antes de aplicar.", "Optimiza tu CV automáticamente para cada oferta.", "Recibe un plan personalizado para mejorar tu perfil."],
       cta: "Empezar Gratis", micro: "Únete a miles de candidatos que ya están consiguiendo entrevistas.",
     },
     company: {
-      label: "PARA EMPRESAS", title: "Soy Empresa / Reclutador",
+      label: "PARA EMPRESAS", title: "Encuentra tu próxima contratación",
       pain: "¿Pierdes horas filtrando CVs que no encajan?",
       benefits: ["Recibe solo candidatos con >80% de compatibilidad real.", "Reduce el tiempo de contratación en un 70%.", "Accede a un ranking justificado por IA, no por palabras clave."],
       cta: "Ver Solución para RRHH", micro: "Prueba gratuita para equipos de contratación.",
@@ -52,8 +52,8 @@ const translations = {
     titleEnd: "potenciada per IA.",
     subtitle: "Optimitzem la cerca de feina per a candidats i accelerem la contractació per a empreses. Sense biaixos, sense perdre temps, 100% basat en dades.",
     choose: "Tria com vols utilitzar TalentMatch AI",
-    candidate: { label:"PER A PERSONES",title:"Busco feina",pain:"Cansat d’enviar CVs al buit i no rebre resposta?",benefits:["Descobreix el teu % real d’encaix abans d’aplicar.","Optimitza el teu CV automàticament per a cada oferta.","Rep un pla personalitzat per millorar el teu perfil."],cta:"Començar gratis",micro:"Uneix-te a milers de candidats que ja estan aconseguint entrevistes." },
-    company: { label:"PER A EMPRESES",title:"Soc empresa o reclutador",pain:"Perds hores filtrant CVs que no encaixen?",benefits:["Rep només candidats amb >80% de compatibilitat real.","Redueix el temps de contractació en un 70%.","Accedeix a un rànquing justificat per IA, no per paraules clau."],cta:"Veure solució per a RRHH",micro:"Prova gratuïta per a equips de contractació." },
+    candidate: { label:"PER A PERSONES",title:"Troba la teva propera feina",pain:"Cansat d’enviar CVs al buit i no rebre resposta?",benefits:["Descobreix el teu % real d’encaix abans d’aplicar.","Optimitza el teu CV automàticament per a cada oferta.","Rep un pla personalitzat per millorar el teu perfil."],cta:"Començar gratis",micro:"Uneix-te a milers de candidats que ja estan aconseguint entrevistes." },
+    company: { label:"PER A EMPRESES",title:"Troba la teva propera contractació",pain:"Perds hores filtrant CVs que no encaixen?",benefits:["Rep només candidats amb >80% de compatibilitat real.","Redueix el temps de contractació en un 70%.","Accedeix a un rànquing justificat per IA, no per paraules clau."],cta:"Veure solució per a RRHH",micro:"Prova gratuïta per a equips de contractació." },
     howTitle: "Com funciona TalentMatch AI?", howCandidate: {label: "PER A PERSONES",steps: [["01", "Puja el teu CV", "Carrega el teu currículum en PDF o DOCX. La nostra IA extrau automàticament les teves habilitats, experiència i formació."],["02", "Compara amb ofertes", "Enganxa o selecciona una oferta de feina. El sistema creua el teu perfil amb els requisits i calcula el teu % d'encaix real."],["03", "Millora el teu perfil", "Rep un informe detallat amb les skills que et falten i recursos concrets per aconseguir-les."],]},howCompany: {label: "PER A EMPRESES",steps: [["01", "Publica la teva oferta", "Defineix el lloc amb els seus requisits Must Have i Nice to Have. El sistema ho processa automàticament."],["02", "Rànquing automàtic", "Rep un rànquing de candidats ordenat per compatibilitat real, amb l'explicació de cada puntuació."],["03", "Contracta més ràpid", "Redueix el temps de selecció fins a un 70% centrant-te només en els candidats que realment encaixen."],]},
     trustTitle:"Tecnologia transparent i ètica.",trust:[["Privacitat total","Les teves dades no es venen. Processament segur."],["IA explicable","T’expliquem el perquè de cada recomanació."],["Sense biaixos","Algoritmes auditats per prioritzar el mèrit."]],
   },
@@ -65,8 +65,8 @@ const translations = {
     titleEnd: "powered by AI.",
     subtitle: "We optimize job searches for candidates and accelerate hiring for companies. No bias, no wasted time, 100% data-driven.",
     choose: "Choose how you want to use TalentMatch AI",
-    candidate: { label:"FOR PEOPLE",title:"I’m looking for work",pain:"Tired of sending résumés into a void and hearing nothing back?",benefits:["See your real match percentage before applying.","Automatically optimize your résumé for each job.","Get a personal plan to strengthen your profile."],cta:"Start Free",micro:"Join thousands of candidates already landing interviews." },
-    company: { label:"FOR COMPANIES",title:"I’m a company or recruiter",pain:"Losing hours filtering résumés that do not fit?",benefits:["Receive only candidates with >80% real compatibility.","Reduce hiring time by 70%.","Access an AI-justified ranking, not a keyword filter."],cta:"See the HR Solution",micro:"Free trial for hiring teams." },
+    candidate: { label:"FOR PEOPLE",title:"Find your next job",pain:"Tired of sending résumés into a void and hearing nothing back?",benefits:["See your real match percentage before applying.","Automatically optimize your résumé for each job.","Get a personal plan to strengthen your profile."],cta:"Start Free",micro:"Join thousands of candidates already landing interviews." },
+    company: { label:"FOR COMPANIES",title:"Find your next hire",pain:"Losing hours filtering résumés that do not fit?",benefits:["Receive only candidates with >80% real compatibility.","Reduce hiring time by 70%.","Access an AI-justified ranking, not a keyword filter."],cta:"See the HR Solution",micro:"Free trial for hiring teams." },
     howTitle: "How does TalentMatch AI work?",howCandidate: {label: "FOR INDIVIDUALS",steps: [ ["01", "Upload your CV", "Upload your resume in PDF or DOCX. Our AI automatically extracts your skills, experience, and education."],["02", "Compare with job offers", "Paste or select a job offer. The system cross-references your profile with the requirements and calculates your real match %."],["03", "Improve your profile", "Receive a detailed report with the skills you're missing and concrete resources to acquire them."],]},howCompany: {label: "FOR COMPANIES",steps: [["01", "Post your job offer", "Define the position with its Must Have and Nice to Have requirements. The system processes it automatically."],["02", "Automatic ranking", "Receive a ranked list of candidates sorted by real compatibility, with an explanation for each score."],["03", "Hire faster", "Reduce screening time by up to 70% by focusing only on candidates who truly fit."],]},
     trustTitle:"Transparent and ethical technology.",trust:[["Total privacy","Your data is never sold. Secure processing."],["Explainable AI","We explain the reason behind every recommendation."],["Without bias","Audited algorithms prioritize merit."]],
   },
@@ -78,7 +78,7 @@ export function HomePage() {
 
   return (
     <>
-      <Header language={language} />
+      <Header />
       <main>
         <section className="hero">
           <div className="container hero__content">
@@ -147,7 +147,7 @@ export function HomePage() {
             </div>
           </div>
         </section>
-        
+
         <section className="trust" id="confianza">
           <div className="container">
             <h2>{t.trustTitle}</h2>
@@ -163,7 +163,7 @@ export function HomePage() {
           </div>
         </section>
       </main>
-      <Footer language={language} />
+      <Footer />
     </>
   );
 }

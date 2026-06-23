@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { useLanguage } from "../context/LanguageContext";
 import { BackButton } from "../components/BackButton";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { TrainingPartnersCarousel } from "../components/TrainingPartnersCarousel";
+import { useLanguage } from "../context/LanguageContext";
 
 const copy = {
   es:{eyebrow:"PORTAL EMPRESA",titleStart:"Publica",titleAccent:"oportunidades",titleEnd:"Descubre talento que encaja.",text:"Crea ofertas y formaciones que después conectaremos con el motor de matching.",job:"Nueva oferta de trabajo",course:"Nuevo curso o formación",name:"Nombre",location:"Localización",description:"Descripción y requisitos",skills:"Competencias",saveJob:"Guardar oferta",saveCourse:"Guardar formación",saved:"Guardado en este navegador."},
@@ -23,7 +23,7 @@ function CompanyForm({ type, t, language }) {
     setMessage(t.saved);
   }
   return (
-    <form className="company-form" onSubmit={submit}>
+    <form id={type} className="company-form" onSubmit={submit}>
       <h2>{type === "jobs" ? t.job : t.course}</h2>
       <label>{t.name}<input name="title" required /></label>
       <label>{type === "jobs" ? t.location : t.skills}<input name={type === "jobs" ? "location" : "skills"} required /></label>
@@ -40,7 +40,7 @@ export function CompanyPage() {
   const t = copy[language];
   return (
     <div className="portal portal--company">
-      <Header language={language} portal="company" />
+      <Header portal="company" />
       <main className="portal-main">
         <BackButton language={language} />
         <section className="portal-intro">
@@ -56,7 +56,7 @@ export function CompanyPage() {
           <CompanyForm type="courses" t={t} language={language} />
         </section>
       </main>
-      <Footer language={language} />
+      <Footer />
     </div>
   );
 }

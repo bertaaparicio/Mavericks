@@ -1,3 +1,4 @@
+import { useLanguage } from "../context/LanguageContext";
 import { Logo } from "./Logo";
 
 const copy = {
@@ -6,8 +7,10 @@ const copy = {
   en: { privacy: "Privacy", terms: "Terms", contact: "Contact and support", social: "Social media" },
 };
 
-export function Footer({ language }) {
+export function Footer() {
+  const { language } = useLanguage();
   const t = copy[language];
+
   return (
     <footer className="site-footer">
       <Logo />

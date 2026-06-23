@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
 import { BackButton } from "../components/BackButton";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { useLanguage } from "../context/LanguageContext";
 
 const translations = {
@@ -185,7 +185,7 @@ export function PricingPage() {
 
   return (
     <div className="pricing-page">
-      <Header language={language} portal="pricing" />
+      <Header portal="pricing" />
       <main className="pricing-main">
         <BackButton language={language} />
 
@@ -218,7 +218,7 @@ export function PricingPage() {
           </div>
         </section>
       </main>
-      <Footer language={language} />
+      <Footer />
     </div>
   );
 }

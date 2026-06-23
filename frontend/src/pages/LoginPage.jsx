@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
+import { Link, useNavigate } from "react-router-dom";
 import { BackButton } from "../components/BackButton";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { useLanguage } from "../context/LanguageContext";
-import { useNavigate } from "react-router-dom";
 
 const translations = {
   es: {
@@ -116,9 +115,9 @@ export function LoginPage() {
     window.setTimeout(() => {
       setLoading(false);
       // Guardar sesión
-      localStorage.setItem("talentmatch-user", JSON.stringify({ 
+      localStorage.setItem("talentmatch-user", JSON.stringify({
         role: accountType,  // "candidate" o "company"
-        email: email 
+        email: email
       }));
       // Redirigir según tipo de cuenta
       if (accountType === "candidate") {
@@ -131,7 +130,7 @@ export function LoginPage() {
 
   return (
     <div className="login-page">
-      <Header language={language} portal="login" />
+      <Header portal="login" />
       <main className="login-main">
         <BackButton language={language} />
 
@@ -237,7 +236,7 @@ export function LoginPage() {
           </div>
         </section>
       </main>
-      <Footer language={language} />
+      <Footer />
     </div>
   );
 }

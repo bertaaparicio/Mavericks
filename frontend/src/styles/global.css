@@ -113,6 +113,11 @@ p {
   padding: 0 max(20px, calc((100vw - 1200px) / 2));
   background: #fff;
 }
+.site-header__left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
 .logo {
   display: inline-flex;
   align-items: center;
@@ -131,9 +136,9 @@ p {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
-  font-size: 14px;
-  font-weight: 700;
+  gap: 32px;
+  font-size: 15px;
+  font-weight: 600;
 }
 .site-nav a:not(.button):hover {
   color: var(--purple);
@@ -152,7 +157,7 @@ p {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
-  font-weight: 700;
+  font-weight: 600;
 }
 .button {
   display: inline-flex;
@@ -196,7 +201,7 @@ p {
 .hero h1 {
   margin: 0 auto 25px;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(44px, 6vw, 78px);
+  font-size: clamp(32px, 5vw, 58px);
   line-height: 1.03;
   letter-spacing: -3.5px;
 }
@@ -439,7 +444,7 @@ p {
 .audience-card h3 {
   margin: 9px 0 12px;
   font-family: "Manrope", sans-serif;
-  font-size: 31px;
+  font-size: 26px;
 }
 .audience-card__pain {
   min-height: 50px;
@@ -1714,7 +1719,7 @@ p {
     gap: 8px;
   }
   .hero h1 {
-    font-size: 42px;
+    font-size: 32px;
     letter-spacing: -2px;
   }
   .audience-card__scene {
