@@ -1,4 +1,4 @@
-"""Async service for querying Groq models as a fallback."""
+"""Async service for querying Groq-hosted models."""
 
 from __future__ import annotations
 

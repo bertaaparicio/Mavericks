@@ -24,6 +24,30 @@ def test_health_endpoint(mock_ollama: MagicMock, mock_search: MagicMock) -> None
     assert response.json() == {"status": "ok"}
 
 
+@patch.dict(
+    "os.environ",
+    {
+        "AI_PROVIDER": "groq",
+        "AI_FALLBACK_PROVIDER": "ollama",
+        "GROQ_MODEL": "openai/gpt-oss-20b",
+        "GROQ_API_KEY": "test-key",
+    },
+)
+def test_ai_health_endpoint() -> None:
+    from app.main import app
+
+    test_client = TestClient(app)
+    response = test_client.get("/health/ai")
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "configured",
+        "provider": "groq",
+        "model": "openai/gpt-oss-20b",
+        "fallback_provider": "ollama",
+        "api_key_configured": True,
+    }
+
+
 @patch("app.main._search_jobs", return_value=[])
 @patch("app.main.AIModelClient")
 def test_match_cv_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> None:

@@ -115,6 +115,24 @@ async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/health/ai")
+async def ai_health() -> dict[str, str | bool]:
+    """Expose non-sensitive AI configuration for deployment verification."""
+
+    provider = os.getenv("AI_PROVIDER", "groq").strip().lower()
+    return {
+        "status": "configured" if provider != "groq" or bool(os.getenv("GROQ_API_KEY")) else "missing_api_key",
+        "provider": provider,
+        "model": (
+            os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+            if provider == "groq"
+            else os.getenv("OLLAMA_MODEL", "llama2:latest")
+        ),
+        "fallback_provider": os.getenv("AI_FALLBACK_PROVIDER", "ollama"),
+        "api_key_configured": bool(os.getenv("GROQ_API_KEY")),
+    }
+
+
 @app.post("/match-cv", response_model=MatchResponse)
 async def match_cv(file: UploadFile = File(...)) -> MatchResponse:
     suffix = os.path.splitext(file.filename or "cv.pdf")[1]

@@ -1,4 +1,4 @@
-"""Reusable async service for querying local Ollama models."""
+"""Reusable async client with configurable Groq/Ollama provider priority."""
 
 from __future__ import annotations
 
@@ -28,7 +28,12 @@ _MAX_DELAY = 10.0
 
 
 class AIModelClient:
-    """Async model client supporting Ollama with seamless Groq fallback."""
+    """Async model client.
+
+    ``AI_PROVIDER=groq`` makes Groq the primary provider. Ollama remains
+    available as a fallback and can be restored as primary with
+    ``AI_PROVIDER=ollama`` without changing application code.
+    """
 
     def __init__(
         self,
@@ -44,6 +49,10 @@ class AIModelClient:
             timeout=self.settings.timeout,
         )
         self._groq_client: Any | None = None
+        self.provider = _provider_name(os.getenv("AI_PROVIDER", "groq"))
+        self.fallback_provider = _provider_name(
+            os.getenv("AI_FALLBACK_PROVIDER", "ollama")
+        )
 
     def _get_groq_client(self) -> Any | None:
         if self._groq_client is None:
@@ -96,6 +105,23 @@ class AIModelClient:
         self,
         request: ChatRequest,
     ) -> ModelResponse:
+        if self.provider == "groq":
+            groq_client = self._get_groq_client()
+            if groq_client is not None:
+                try:
+                    return await groq_client.chat(request)
+                except Exception as exc:
+                    logger.warning("Groq chat failed: %s", exc)
+                    if self.fallback_provider != "ollama":
+                        raise OllamaModelError(f"Groq request failed: {exc}") from exc
+            elif self.fallback_provider != "ollama":
+                raise OllamaModelError(
+                    "Groq is the selected provider but GROQ_API_KEY is not configured."
+                )
+
+            logger.warning("Falling back from Groq to Ollama for chat.")
+            return await self._with_retry(self._chat, request)
+
         try:
             return await self._with_retry(self._chat, request)
         except OllamaModelError as exc:
@@ -131,6 +157,24 @@ class AIModelClient:
         self,
         request: ChatRequest,
     ) -> AsyncIterator[str]:
+        if self.provider == "groq":
+            groq_client = self._get_groq_client()
+            if groq_client is not None:
+                try:
+                    async for chunk in groq_client.stream_chat(request):
+                        yield chunk
+                    return
+                except Exception as exc:
+                    logger.warning("Groq stream_chat failed: %s", exc)
+                    if self.fallback_provider != "ollama":
+                        raise OllamaModelError(f"Groq request failed: {exc}") from exc
+            elif self.fallback_provider != "ollama":
+                raise OllamaModelError(
+                    "Groq is the selected provider but GROQ_API_KEY is not configured."
+                )
+
+            logger.warning("Falling back from Groq to Ollama for stream_chat.")
+
         use_fallback = False
         try:
             stream = await self._client.chat(
@@ -166,6 +210,23 @@ class AIModelClient:
         self,
         request: GenerateRequest,
     ) -> ModelResponse:
+        if self.provider == "groq":
+            groq_client = self._get_groq_client()
+            if groq_client is not None:
+                try:
+                    return await groq_client.generate(request)
+                except Exception as exc:
+                    logger.warning("Groq generate failed: %s", exc)
+                    if self.fallback_provider != "ollama":
+                        raise OllamaModelError(f"Groq request failed: {exc}") from exc
+            elif self.fallback_provider != "ollama":
+                raise OllamaModelError(
+                    "Groq is the selected provider but GROQ_API_KEY is not configured."
+                )
+
+            logger.warning("Falling back from Groq to Ollama for generate.")
+            return await self._with_retry(self._generate, request)
+
         try:
             return await self._with_retry(self._generate, request)
         except OllamaModelError as exc:
@@ -199,6 +260,24 @@ class AIModelClient:
         self,
         request: GenerateRequest,
     ) -> AsyncIterator[str]:
+        if self.provider == "groq":
+            groq_client = self._get_groq_client()
+            if groq_client is not None:
+                try:
+                    async for chunk in groq_client.stream_generate(request):
+                        yield chunk
+                    return
+                except Exception as exc:
+                    logger.warning("Groq stream_generate failed: %s", exc)
+                    if self.fallback_provider != "ollama":
+                        raise OllamaModelError(f"Groq request failed: {exc}") from exc
+            elif self.fallback_provider != "ollama":
+                raise OllamaModelError(
+                    "Groq is the selected provider but GROQ_API_KEY is not configured."
+                )
+
+            logger.warning("Falling back from Groq to Ollama for stream_generate.")
+
         use_fallback = False
         try:
             stream = await self._client.generate(
@@ -315,6 +394,14 @@ def _to_dict(value: Any) -> dict[str, Any]:
         return value.model_dump()
 
     return dict(value)
+
+
+def _provider_name(value: str) -> str:
+    provider = value.strip().lower()
+    if provider not in {"groq", "ollama", "none"}:
+        logger.warning("Unknown AI provider '%s'; using Groq.", value)
+        return "groq"
+    return provider
 
 
 # Backward-compatible alias

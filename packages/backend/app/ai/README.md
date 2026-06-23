@@ -1,24 +1,37 @@
 # AI Module
 
-Reusable async helpers for querying AI models
+Reusable async helpers for querying AI models.
 
-If local Ollama service is unavailable the client automatically uses Groq for inference.
+Groq is the primary provider. Ollama is preserved as a configurable fallback.
 
 ## Model Configuration
 
 ```bash
-OLLAMA_MODEL=gpt-oss:20b
-GROQ_MODEL=openai/gpt-oss-20b
+AI_PROVIDER=groq
+AI_FALLBACK_PROVIDER=ollama
 GROQ_API_KEY=your_key_here
+GROQ_MODEL=openai/gpt-oss-20b
+OLLAMA_MODEL=gpt-oss:20b
 ```
 
-## (optional) If using Ollama
+For Docker, copy `.env.template` to `.env` at the repository root and add the
+real Groq key. Never commit `.env`. For a direct local execution, export the
+same variables in the shell before starting `run.py`.
 
-Make sure Ollama is running and the model is available if you wish to use local inference:
+## Ollama fallback
+
+Ollama remains available if Groq is unavailable:
 
 ```bash
 ollama serve
 ollama pull gpt-oss:20b
+```
+
+To use Ollama as the primary provider again:
+
+```bash
+AI_PROVIDER=ollama
+AI_FALLBACK_PROVIDER=groq
 ```
 
 ## Usage

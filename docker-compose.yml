@@ -40,6 +40,10 @@ services:
       DB_USER: postgres
       DB_PASSWORD: 12345
       DB_PORT: "5432"
+      AI_PROVIDER: groq
+      AI_FALLBACK_PROVIDER: ollama
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
       OLLAMA_MODEL: gpt-oss:20b
     depends_on:
       postgres:
