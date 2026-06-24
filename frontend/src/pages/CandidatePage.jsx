@@ -110,7 +110,7 @@ export function CandidatePage() {
                 plan={plan}
                 onPlanChange={changePlan}
                 onSaveAnswers={async (answers) => {
-                  const updated = await completeProfile(result.matching_profile, answers);
+                  const updated = await completeProfile(result.matching_profile, answers, language, plan);
                   setResult((current) => ({ ...current, ranked_jobs: updated.ranked_jobs }));
                 }}
               />

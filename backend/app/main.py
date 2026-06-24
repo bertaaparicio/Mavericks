@@ -117,6 +117,8 @@ class MatchFromProfileResponse(BaseModel):
 class CompleteProfileRequest(BaseModel):
     matching_profile: dict[str, Any]
     answers: dict[str, Any]
+    language: str = "ca"
+    plan: str = "free"
 
 
 @app.get("/health")
@@ -156,6 +158,8 @@ async def integrated_analyze(
         raise HTTPException(status_code=400, detail="The uploaded CV is empty.")
 
     try:
+        # Agent 1: aquest endpoint dispara el lector/anàlisi del CV.
+        # Retorna resum, checklist, perfil de matching i ofertes inicials.
         return await analyze_cv_and_match(
             filename=filename,
             content=content,
@@ -176,10 +180,14 @@ async def integrated_analyze(
 async def complete_profile(body: CompleteProfileRequest) -> dict[str, Any]:
     """Rerun job matching after the candidate answers pending questions."""
 
+    # Agent 1 bis + Agent 2 provisional:
+    # l'usuari completa preguntes pendents i tornem a consultar ofertes.
     return {
-        "ranked_jobs": match_after_answers(
+        "ranked_jobs": await match_after_answers(
             matching_profile=body.matching_profile,
             answers=body.answers,
+            language=body.language,
+            plan=body.plan,
         )
     }
 

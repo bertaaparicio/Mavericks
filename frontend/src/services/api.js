@@ -6,7 +6,7 @@ async function parseResponse(response) {
   return result;
 }
 
-/** Envia el CV al flux integrat: Groq, checklist i PostgreSQL. */
+/** Agent 1: envia el CV al flux integrat de lectura, Groq, checklist i matching inicial. */
 export async function analyzeCv(file, language, plan = "free") {
   const body = new FormData();
   body.append("cv", file);
@@ -17,14 +17,16 @@ export async function analyzeCv(file, language, plan = "free") {
   return parseResponse(response);
 }
 
-/** Torna a consultar les ofertes després de completar el perfil. */
-export async function completeProfile(matchingProfile, answers) {
+/** Agent 1 bis + Agent 2 provisional: reconsulta ofertes després de completar el perfil. */
+export async function completeProfile(matchingProfile, answers, language = "ca", plan = "free") {
   const response = await fetch("/api/profile/complete", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       matching_profile: matchingProfile,
       answers,
+      language,
+      plan,
     }),
   });
   return parseResponse(response);

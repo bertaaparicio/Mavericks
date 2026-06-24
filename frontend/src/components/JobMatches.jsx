@@ -10,6 +10,10 @@ const copy = {
     location: "Ubicación",
     seniority: "Nivel",
     type: "Contrato",
+    why: "Por qué encaja",
+    strengths: "Puntos fuertes",
+    missing: "Para subir el match",
+    tip: "Tip TalentMatch",
     freeNote: "El plan PRO mostrará el desglose de requisitos y las competencias que faltan.",
     proNote: "El desglose detallado de requisitos se incorporará al ampliar los datos de las ofertas.",
   },
@@ -22,6 +26,10 @@ const copy = {
     location: "Ubicació",
     seniority: "Nivell",
     type: "Contracte",
+    why: "Per què encaixa",
+    strengths: "Punts forts",
+    missing: "Per pujar el match",
+    tip: "Tip TalentMatch",
     freeNote: "El pla PRO mostrarà el desglossament de requisits i les competències que falten.",
     proNote: "El desglossament detallat s’incorporarà en ampliar les dades de les ofertes.",
   },
@@ -34,6 +42,10 @@ const copy = {
     location: "Location",
     seniority: "Level",
     type: "Employment",
+    why: "Why it fits",
+    strengths: "Strengths",
+    missing: "To raise the match",
+    tip: "TalentMatch tip",
     freeNote: "The PRO plan will show requirement details and missing skills.",
     proNote: "Detailed requirements will be added when richer job data is available.",
   },
@@ -82,6 +94,38 @@ export function JobMatches({ jobs = [], language, plan }) {
                 <div><dt>{t.seniority}</dt><dd>{job.seniority_level || "—"}</dd></div>
                 <div><dt>{t.type}</dt><dd>{job.employment_type || "—"}</dd></div>
               </dl>
+              {job.match_explanation && (
+                <div className="job-match-story">
+                  {job.match_explanation.why_it_fits && (
+                    <div>
+                      <strong>{t.why}</strong>
+                      <p>{job.match_explanation.why_it_fits}</p>
+                    </div>
+                  )}
+                  {!!job.match_explanation.strengths?.length && (
+                    <div>
+                      <strong>{t.strengths}</strong>
+                      <ul>
+                        {job.match_explanation.strengths.map((item) => <li key={item}>{item}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {plan === "pro" && !!job.match_explanation.missing?.length && (
+                    <div>
+                      <strong>{t.missing}</strong>
+                      <ul>
+                        {job.match_explanation.missing.map((item) => <li key={item}>{item}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {job.match_explanation.final_tip && (
+                    <div>
+                      <strong>{t.tip}</strong>
+                      <p>{job.match_explanation.final_tip}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </article>
           ))}
         </div>
