@@ -558,6 +558,9 @@ p {
   margin: 0 auto;
   padding: 65px 0 100px;
 }
+.portal--company .portal-main {
+  width: min(1420px, calc(100% - 56px));
+}
 .back-button {
   display: inline-flex;
   align-items: center;
@@ -957,6 +960,9 @@ p {
   color: #bdbdbd;
   line-height: 1.65;
 }
+.cv-audit__cta {
+  margin-top: 20px;
+}
 .cv-audit__score {
   display: grid;
   grid-template-columns: auto auto;
@@ -1189,6 +1195,164 @@ p {
   color: #777;
   font-size: 12px;
   line-height: 1.55;
+}
+.company-dashboards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 28px;
+}
+.company-dashboard {
+  min-width: 0;
+  padding: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 196, 167, 0.16), transparent 34%),
+    #fff;
+  box-shadow: 0 18px 45px rgba(10, 70, 50, 0.08);
+}
+.company-dashboard--courses {
+  background:
+    radial-gradient(circle at top right, rgba(161, 0, 255, 0.12), transparent 34%),
+    #fff;
+}
+.company-dashboard--courses .company-dashboard__heading span {
+  color: var(--purple);
+}
+.company-dashboard--courses .company-dashboard__heading > strong {
+  background: var(--green);
+}
+.company-dashboard__heading {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.company-dashboard__heading span {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.company-dashboard__heading h2 {
+  margin: 7px 0 9px;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  letter-spacing: -1.5px;
+}
+.company-dashboard__heading p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.company-dashboard__heading > strong {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  place-items: center;
+  color: #fff;
+  border-radius: 19px;
+  background: #000;
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+}
+.company-dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.company-job-card {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid #e6eeee;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+}
+.company-job-card--course {
+  border-color: rgba(161, 0, 255, 0.13);
+}
+.company-job-card--course .company-job-card__location {
+  color: var(--purple);
+  font-weight: 800;
+}
+.company-job-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.company-job-card__top span {
+  color: #777;
+  font-size: 11px;
+  font-weight: 800;
+}
+.company-job-card__top strong {
+  color: var(--green);
+  font-size: 18px;
+}
+.company-job-card h3 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 20px;
+  line-height: 1.15;
+}
+.company-job-card__location {
+  margin: -7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.company-job-card__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.company-job-card__meta div {
+  padding: 12px;
+  border-radius: 13px;
+  background: #f2f7f5;
+}
+.company-job-card__meta small {
+  display: block;
+  margin-bottom: 5px;
+  color: #6d7774;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.company-job-card__meta strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 20px;
+}
+.company-job-card details {
+  padding-top: 10px;
+  border-top: 1px solid #edf1ef;
+}
+.company-job-card summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+}
+.company-job-card details p {
+  margin: 10px 0 0;
+  color: #4f5553;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.company-dashboard__empty {
+  margin: 0;
+  padding: 28px;
+  color: #66706d;
+  border: 1px dashed #cddbd7;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
 }
 .company-grid {
   display: grid;
@@ -1719,8 +1883,13 @@ p {
   .login-layout,
   .checklist-fields,
   .cv-audit__grid,
-  .job-matches__grid {
+  .job-matches__grid,
+  .company-dashboards-grid,
+  .company-dashboard__grid {
     grid-template-columns: 1fr;
+  }
+  .company-dashboard__heading {
+    display: grid;
   }
   .site-nav > a:not(.button) {
     display: none;
