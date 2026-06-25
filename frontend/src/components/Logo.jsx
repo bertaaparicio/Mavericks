@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 
 /** Logotipo textual reutilizado en todas las páginas. */
 export function Logo({ variant = "default" }) {
+  const isPro = localStorage.getItem("talentmatch-plan") === "pro";
+
   return (
     <Link className={`logo logo--${variant}`} to="/" aria-label="TalentMatch AI">
       <img
@@ -10,7 +12,10 @@ export function Logo({ variant = "default" }) {
         alt=""
         aria-hidden="true"
       />
-      <span>TalentMatch <strong>AI</strong></span>
+      <span className="logo__text">
+        TalentMatch <strong>AI</strong>
+        {isPro && <span className="logo__pro">PRO</span>}
+      </span>
     </Link>
   );
 }
