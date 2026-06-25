@@ -10,8 +10,8 @@ from app.ai.ollama_client import AIModelClient
 from app.ai.schemas import ChatMessage, ChatRequest
 from app.services.database_service import query_jobs_structured
 from app.services.profile_parser import parse_cv_profile
-from backend.services.checklist_service import build_checklist
-from backend.services.cv_reader import analyse_cv, extract_text
+from app.services.checklist_service import build_checklist
+from app.services.cv_reader import analyse_cv, extract_text
 
 
 logger = logging.getLogger(__name__)
@@ -186,13 +186,11 @@ async def match_after_answers(
     if desired_role or primary_role:
         profile["job_title_keywords"] = _as_list(desired_role or primary_role)
 
-    profile["seniority_level"] = (
-        answers.get("professional_profile.seniority")
-        or profile.get("seniority_level")
-    )
-    profile["location"] = (
-        answers.get("identity.current_location")
-        or profile.get("location")
+    profile["seniority_level"] = answers.get(
+        "professional_profile.seniority"
+    ) or profile.get("seniority_level")
+    profile["location"] = answers.get("identity.current_location") or profile.get(
+        "location"
     )
     profile["industry"] = (
         answers.get("career_goal.desired_sector")

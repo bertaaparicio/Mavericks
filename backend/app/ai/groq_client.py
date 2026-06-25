@@ -53,7 +53,9 @@ class GroqModelClient:
             if self.api_key:
                 self._client = AsyncGroq(api_key=self.api_key)
             else:
-                raise GroqModelError("Groq API key not set. Please set GROQ_API_KEY environment variable.")
+                raise GroqModelError(
+                    "Groq API key not set. Please set GROQ_API_KEY environment variable."
+                )
 
         model = request.model
         if not model or ":" in model:
@@ -73,7 +75,9 @@ class GroqModelClient:
         return ModelResponse(
             model=model,
             content=content,
-            raw=completion.model_dump() if hasattr(completion, "model_dump") else dict(completion),
+            raw=completion.model_dump()
+            if hasattr(completion, "model_dump")
+            else dict(completion),
         )
 
     async def stream_chat(
@@ -85,7 +89,9 @@ class GroqModelClient:
             if self.api_key:
                 self._client = AsyncGroq(api_key=self.api_key)
             else:
-                raise GroqModelError("Groq API key not set. Please set GROQ_API_KEY environment variable.")
+                raise GroqModelError(
+                    "Groq API key not set. Please set GROQ_API_KEY environment variable."
+                )
 
         model = request.model
         if not model or ":" in model:
@@ -133,7 +139,7 @@ class GroqModelClient:
 
     def _build_payload(self, request: ChatRequest, model: str) -> dict[str, Any]:
         messages = _with_system_message(request.messages, request.system)
-        
+
         options = request.options or {}
         temperature = options.get("temperature", 1.0)
         top_p = options.get("top_p", 1.0)
@@ -142,7 +148,9 @@ class GroqModelClient:
 
         payload: dict[str, Any] = {
             "model": model,
-            "messages": [{"role": msg.role, "content": msg.content} for msg in messages],
+            "messages": [
+                {"role": msg.role, "content": msg.content} for msg in messages
+            ],
             "temperature": temperature,
             "top_p": top_p,
             "stop": stop,
@@ -161,7 +169,12 @@ class GroqModelClient:
             payload["max_completion_tokens"] = max_tokens
 
         # Only pass reasoning_effort if the model is a reasoning model or explicitly requested
-        if "gpt-oss" in model or "o1" in model or "o3" in model or "reasoning" in options:
+        if (
+            "gpt-oss" in model
+            or "o1" in model
+            or "o3" in model
+            or "reasoning" in options
+        ):
             payload["reasoning_effort"] = reasoning_effort
 
         return payload

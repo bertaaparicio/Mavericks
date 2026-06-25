@@ -132,7 +132,9 @@ async def ai_health() -> dict[str, str | bool]:
 
     provider = os.getenv("AI_PROVIDER", "groq").strip().lower()
     return {
-        "status": "configured" if provider != "groq" or bool(os.getenv("GROQ_API_KEY")) else "missing_api_key",
+        "status": "configured"
+        if provider != "groq" or bool(os.getenv("GROQ_API_KEY"))
+        else "missing_api_key",
         "provider": provider,
         "model": (
             os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
@@ -210,15 +212,23 @@ async def match_cv(file: UploadFile = File(...)) -> MatchResponse:
         os.unlink(tmp.name)
 
     if not cv_text.strip():
-        raise HTTPException(status_code=400, detail="PDF is empty or could not be parsed")
+        raise HTTPException(
+            status_code=400, detail="PDF is empty or could not be parsed"
+        )
 
     logger.info("Extracted %d characters from CV", len(cv_text))
 
     settings = OllamaSettings.from_env()
     async with AIModelClient(settings=settings) as client:
-        response = await client.chat(ChatRequest(
-            messages=[ChatMessage(role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text))],
-        ))
+        response = await client.chat(
+            ChatRequest(
+                messages=[
+                    ChatMessage(
+                        role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text)
+                    )
+                ],
+            )
+        )
 
     cv_profile = response.content
     logger.info("CV analysis complete (%d chars)", len(cv_profile))
@@ -246,7 +256,9 @@ async def cv_qa_init(file: UploadFile = File(...)) -> QAInitResponse:
         os.unlink(tmp.name)
 
     if not cv_text.strip():
-        raise HTTPException(status_code=400, detail="PDF is empty or could not be parsed")
+        raise HTTPException(
+            status_code=400, detail="PDF is empty or could not be parsed"
+        )
 
     session = await get_qa_service().init_session(cv_text)
     return QAInitResponse(
@@ -311,17 +323,19 @@ async def _search_jobs(profile: dict) -> list[JobMatchResult]:
             employment_type=profile.get("employment_type"),
         )
         for j in raw_jobs:
-            jobs.append(JobMatchResult(
-                job_title=j.get("job_title", ""),
-                company_name=j.get("company_name", ""),
-                location=j.get("location", ""),
-                seniority_level=j.get("seniority_level", ""),
-                job_function=j.get("job_function", ""),
-                employment_type=j.get("employment_type", ""),
-                industry=j.get("industry", ""),
-                match_score=j.get("match_score", 0),
-                match_ratio=j.get("match_ratio", 0.0),
-            ))
+            jobs.append(
+                JobMatchResult(
+                    job_title=j.get("job_title", ""),
+                    company_name=j.get("company_name", ""),
+                    location=j.get("location", ""),
+                    seniority_level=j.get("seniority_level", ""),
+                    job_function=j.get("job_function", ""),
+                    employment_type=j.get("employment_type", ""),
+                    industry=j.get("industry", ""),
+                    match_score=j.get("match_score", 0),
+                    match_ratio=j.get("match_ratio", 0.0),
+                )
+            )
     except Exception as e:
         logger.warning("Database query failed: %s", e)
 

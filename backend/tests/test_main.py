@@ -7,13 +7,23 @@ from fastapi.testclient import TestClient
 client = TestClient(TestClient)
 
 
-@patch("app.main._search_jobs", return_value=[MagicMock(
-    job_title="Engineer", company_name="C1", location="Barcelona",
-    seniority_level="Senior", job_function="Engineering",
-    employment_type="Full-time", industry="Tech",
-    match_score=50, match_ratio=100.0,
-    model_dump=lambda: {"job_title": "Engineer", "match_ratio": 100.0},
-)])
+@patch(
+    "app.main._search_jobs",
+    return_value=[
+        MagicMock(
+            job_title="Engineer",
+            company_name="C1",
+            location="Barcelona",
+            seniority_level="Senior",
+            job_function="Engineering",
+            employment_type="Full-time",
+            industry="Tech",
+            match_score=50,
+            match_ratio=100.0,
+            model_dump=lambda: {"job_title": "Engineer", "match_ratio": 100.0},
+        )
+    ],
+)
 @patch("app.main.AIModelClient")
 def test_health_endpoint(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
     from app.main import app
@@ -70,11 +80,15 @@ def test_cv_qa_init_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> N
 
 @patch("app.main._search_jobs", return_value=[])
 @patch("app.main.AIModelClient")
-def test_cv_qa_answer_no_session(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
+def test_cv_qa_answer_no_session(
+    mock_ollama: MagicMock, mock_search: MagicMock
+) -> None:
     from app.main import app
 
     test_client = TestClient(app)
-    response = test_client.post("/cv-qa/answer", json={"session_id": "nonexistent", "answer": "test"})
+    response = test_client.post(
+        "/cv-qa/answer", json={"session_id": "nonexistent", "answer": "test"}
+    )
     assert response.status_code == 404
 
 
@@ -107,7 +121,9 @@ def test_cors_headers(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
 
 @patch("app.main._search_jobs", return_value=[])
 @patch("app.main.AIModelClient")
-def test_match_from_profile_empty(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
+def test_match_from_profile_empty(
+    mock_ollama: MagicMock, mock_search: MagicMock
+) -> None:
     from app.main import app
 
     test_client = TestClient(app)
@@ -118,24 +134,34 @@ def test_match_from_profile_empty(mock_ollama: MagicMock, mock_search: MagicMock
 
 @patch("app.main._search_jobs")
 @patch("app.main.AIModelClient")
-def test_match_from_profile_with_params(mock_ollama: MagicMock, mock_search: MagicMock) -> None:
+def test_match_from_profile_with_params(
+    mock_ollama: MagicMock, mock_search: MagicMock
+) -> None:
     from app.main import JobMatchResult
 
     mock_search.return_value = [
         JobMatchResult(
-            job_title="Engineer", company_name="C1", location="Barcelona",
-            seniority_level="Senior", job_function="Engineering",
-            employment_type="Full-time", industry="Tech",
-            match_score=50, match_ratio=100.0,
+            job_title="Engineer",
+            company_name="C1",
+            location="Barcelona",
+            seniority_level="Senior",
+            job_function="Engineering",
+            employment_type="Full-time",
+            industry="Tech",
+            match_score=50,
+            match_ratio=100.0,
         ),
     ]
     from app.main import app
 
     test_client = TestClient(app)
-    response = test_client.post("/match-from-profile", json={
-        "job_title_keywords": ["Engineer"],
-        "seniority_level": "Senior",
-    })
+    response = test_client.post(
+        "/match-from-profile",
+        json={
+            "job_title_keywords": ["Engineer"],
+            "seniority_level": "Senior",
+        },
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data["ranked_jobs"]) == 1

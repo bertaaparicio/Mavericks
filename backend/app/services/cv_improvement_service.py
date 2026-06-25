@@ -13,28 +13,67 @@ from pathlib import Path
 from typing import Any
 
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "cv_improvement_checklist.json"
+CONFIG_PATH = (
+    Path(__file__).resolve().parents[2] / "config" / "cv_improvement_checklist.json"
+)
 
 GENERIC_PITCH_MARKERS = (
-    "dinàmic", "dinámico", "dynamic", "treballador", "trabajador", "hard-working",
-    "ganes d'aprendre", "ganas de aprender", "eager to learn", "apassionat",
-    "apasionado", "passionate", "responsable", "proactiu", "proactivo", "proactive",
+    "dinàmic",
+    "dinámico",
+    "dynamic",
+    "treballador",
+    "trabajador",
+    "hard-working",
+    "ganes d'aprendre",
+    "ganas de aprender",
+    "eager to learn",
+    "apassionat",
+    "apasionado",
+    "passionate",
+    "responsable",
+    "proactiu",
+    "proactivo",
+    "proactive",
 )
 
 WEAK_VERB_MARKERS = (
-    "vaig ajudar", "ayudé", "helped", "participació en", "participación en",
-    "participated in", "responsable de", "responsible for", "encarregat de",
-    "encargado de", "tasques de", "tareas de", "duties included",
+    "vaig ajudar",
+    "ayudé",
+    "helped",
+    "participació en",
+    "participación en",
+    "participated in",
+    "responsable de",
+    "responsible for",
+    "encarregat de",
+    "encargado de",
+    "tasques de",
+    "tareas de",
+    "duties included",
 )
 
 PROFILE_MARKERS = (
-    "perfil", "sobre mi", "about me", "professional summary", "resum professional",
-    "resumen profesional", "objectiu professional", "objetivo profesional",
+    "perfil",
+    "sobre mi",
+    "about me",
+    "professional summary",
+    "resum professional",
+    "resumen profesional",
+    "objectiu professional",
+    "objetivo profesional",
 )
 
 SKILLS_SECTION_MARKERS = (
-    "habilitats", "competències", "habilidades", "competencias", "skills",
-    "stack tècnic", "stack técnico", "technical stack", "tecnologies", "tecnologías",
+    "habilitats",
+    "competències",
+    "habilidades",
+    "competencias",
+    "skills",
+    "stack tècnic",
+    "stack técnico",
+    "technical stack",
+    "tecnologies",
+    "tecnologías",
 )
 
 
@@ -117,12 +156,19 @@ def evaluate_cv_improvements(
     checks = []
 
     quantified_lines = [
-        line for line in lines
-        if re.search(r"\b\d+(?:[.,]\d+)?\s*(?:%|€|\$|hores?|horas?|hours?|clients?|clientes?|users?)\b", line, re.I)
+        line
+        for line in lines
+        if re.search(
+            r"\b\d+(?:[.,]\d+)?\s*(?:%|€|\$|hores?|horas?|hours?|clients?|clientes?|users?)\b",
+            line,
+            re.I,
+        )
     ]
     checks.append(
         _result(
-            definition, "quantified_results", language,
+            definition,
+            "quantified_results",
+            language,
             "good" if quantified_lines else "improve",
             labels["quant_good"] if quantified_lines else labels["quant_bad"],
             None if quantified_lines else labels["quant_rec"],
@@ -132,8 +178,13 @@ def evaluate_cv_improvements(
 
     checks.append(
         _result(
-            definition, "skill_gaps", language, "needs_market_data",
-            labels["market_finding"], labels["market_rec"], [],
+            definition,
+            "skill_gaps",
+            language,
+            "needs_market_data",
+            labels["market_finding"],
+            labels["market_rec"],
+            [],
         )
     )
 
@@ -142,7 +193,9 @@ def evaluate_cv_improvements(
     ) or any(section in {"habilitats", "skills"} for section in sections)
     checks.append(
         _result(
-            definition, "ats_optimization", language,
+            definition,
+            "ats_optimization",
+            language,
             "good" if has_skills_section else "improve",
             labels["ats_good"] if has_skills_section else labels["ats_bad"],
             None if has_skills_section else labels["ats_rec"],
@@ -151,9 +204,10 @@ def evaluate_cv_improvements(
     )
 
     pitch_lines = [
-        line for index, line in enumerate(lines)
+        line
+        for index, line in enumerate(lines)
         if any(marker in line.casefold() for marker in PROFILE_MARKERS)
-        for line in lines[index + 1:index + 4]
+        for line in lines[index + 1 : index + 4]
         if 25 <= len(line) <= 350
     ][:3]
     generic_pitch = any(
@@ -167,18 +221,26 @@ def evaluate_cv_improvements(
         pitch_status, pitch_finding = "good", labels["pitch_good"]
     checks.append(
         _result(
-            definition, "elevator_pitch", language, pitch_status, pitch_finding,
-            labels["pitch_rec"] if pitch_status == "improve" else None, pitch_lines,
+            definition,
+            "elevator_pitch",
+            language,
+            pitch_status,
+            pitch_finding,
+            labels["pitch_rec"] if pitch_status == "improve" else None,
+            pitch_lines,
         )
     )
 
     weak_lines = [
-        line for line in lines
+        line
+        for line in lines
         if any(marker in line.casefold() for marker in WEAK_VERB_MARKERS)
     ]
     checks.append(
         _result(
-            definition, "action_verbs", language,
+            definition,
+            "action_verbs",
+            language,
             "improve" if weak_lines else "good",
             labels["verbs_bad"] if weak_lines else labels["verbs_good"],
             labels["verbs_rec"] if weak_lines else None,
@@ -187,7 +249,9 @@ def evaluate_cv_improvements(
     )
 
     evaluable = [check for check in checks if check["status"] != "needs_market_data"]
-    passed_weight = sum(check["weight"] for check in evaluable if check["status"] == "good")
+    passed_weight = sum(
+        check["weight"] for check in evaluable if check["status"] == "good"
+    )
     available_weight = sum(check["weight"] for check in evaluable)
     score = round((passed_weight / available_weight) * 100) if available_weight else 0
 
@@ -199,7 +263,9 @@ def evaluate_cv_improvements(
         "summary": {
             "good": sum(check["status"] == "good" for check in checks),
             "improve": sum(check["status"] == "improve" for check in checks),
-            "needs_market_data": sum(check["status"] == "needs_market_data" for check in checks),
+            "needs_market_data": sum(
+                check["status"] == "needs_market_data" for check in checks
+            ),
         },
     }
 

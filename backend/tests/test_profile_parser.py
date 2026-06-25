@@ -18,7 +18,9 @@ def test_parse_inline_json() -> None:
 
 
 def test_parse_yaml_block() -> None:
-    text = "```yaml\njob_title_keywords: Engineer, Manager\nseniority_level: Senior\n```"
+    text = (
+        "```yaml\njob_title_keywords: Engineer, Manager\nseniority_level: Senior\n```"
+    )
     result = parse_cv_profile(text)
     assert "Engineer" in result["job_title_keywords"]
     assert "Manager" in result["job_title_keywords"]

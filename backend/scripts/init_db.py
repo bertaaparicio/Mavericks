@@ -22,7 +22,12 @@ DB_CONFIG = {
 }
 
 CSV_ZIP = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "data", "linkedin_job_posts_insights.zip"
+    os.path.dirname(__file__),
+    "..",
+    "..",
+    "..",
+    "data",
+    "linkedin_job_posts_insights.zip",
 )
 
 CREATE_TABLE_SQL = """
@@ -48,7 +53,12 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
 
 
 def main() -> None:
-    logger.info("Connecting to database at %s:%s/%s", DB_CONFIG["host"], DB_CONFIG["port"], DB_CONFIG["database"])
+    logger.info(
+        "Connecting to database at %s:%s/%s",
+        DB_CONFIG["host"],
+        DB_CONFIG["port"],
+        DB_CONFIG["database"],
+    )
     conn = psycopg2.connect(**DB_CONFIG)
     conn.autocommit = False
     try:
@@ -87,7 +97,10 @@ def main() -> None:
                 with conn.cursor() as cur:
                     count = 0
                     for row in reader:
-                        cleaned = [cell.strip().replace("\n", " ").replace("\r", " ") for cell in row[:9]]
+                        cleaned = [
+                            cell.strip().replace("\n", " ").replace("\r", " ")
+                            for cell in row[:9]
+                        ]
                         cur.execute(COPY_SQL, cleaned)
                         count += 1
                         if count % 1000 == 0:
