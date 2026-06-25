@@ -141,6 +141,18 @@ p {
   height: 43px;
   object-fit: contain;
 }
+.logo__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.logo__pro {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #999;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
 .site-nav {
   display: flex;
   align-items: center;

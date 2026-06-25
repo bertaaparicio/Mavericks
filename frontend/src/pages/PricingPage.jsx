@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BackButton } from "../components/BackButton";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -184,6 +185,7 @@ function PricingCard({ plan, featured, billing, onToggle, labels }) {
   const note = featured
     ? isAnnual ? plan.noteAnnual : plan.noteMonthly
     : plan.note;
+  const navigate = useNavigate();
 
   return (
     <article className={`pricing-card ${featured ? "pricing-card--featured" : ""}`}>
@@ -224,12 +226,18 @@ function PricingCard({ plan, featured, billing, onToggle, labels }) {
         ))}
       </ul>
 
-      <Link
-        className={`button ${featured ? "button--candidate" : "button--outline"}`}
-        to="/candidate"
-      >
-        {plan.cta}
-      </Link>
+      {featured ? (
+        <button
+          className="button button--candidate"
+          onClick={handleProClick}
+        >
+          {plan.cta}
+        </button>
+      ) : (
+        <Link className="button button--outline" to="/candidate">
+          {plan.cta}
+        </Link>
+      )}
 
       <small>{note}</small>
     </article>
@@ -281,4 +289,9 @@ export function PricingPage() {
       <Footer />
     </div>
   );
+}
+
+function handleProClick() {
+  localStorage.setItem("talentmatch-plan", "pro");
+  navigate("/candidate");
 }
