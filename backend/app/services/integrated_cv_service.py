@@ -23,37 +23,37 @@ logger = logging.getLogger(__name__)
 PROFILE_PROMPT = """You are TalentMatch AI's CV analysis agent.
 
 Analyze the CV and return ONLY one valid JSON object:
-{
-  "matching_profile": {
+{{
+  "matching_profile": {{
     "job_title_keywords": ["..."],
     "seniority_level": "...",
     "location": "...",
     "job_function": "...",
     "industry": "...",
     "employment_type": "..."
-  },
-  "candidate_fields": {
-    "identity.current_location": {"value": "...", "confidence": 0.0},
-    "identity.preferred_workday": {"value": "...", "confidence": 0.0},
-    "professional_profile.primary_role": {"value": "...", "confidence": 0.0},
-    "professional_profile.years_experience": {"value": "...", "confidence": 0.0},
-    "professional_profile.seniority": {"value": "...", "confidence": 0.0},
-    "professional_profile.sectors": {"value": "...", "confidence": 0.0},
-    "professional_profile.main_responsibilities": {"value": ["..."], "confidence": 0.0},
-    "skills.technical_skills": {"value": ["..."], "confidence": 0.0},
-    "skills.tools": {"value": ["..."], "confidence": 0.0},
-    "skills.soft_skills": {"value": ["..."], "confidence": 0.0},
-    "skills.certifications": {"value": ["..."], "confidence": 0.0},
-    "education.highest_level": {"value": "...", "confidence": 0.0},
-    "education.degrees": {"value": ["..."], "confidence": 0.0},
-    "education.education_center": {"value": "...", "confidence": 0.0},
-    "education.specialization": {"value": "...", "confidence": 0.0},
-    "education.graduation_date": {"value": "...", "confidence": 0.0},
-    "education.ongoing_education": {"value": "...", "confidence": 0.0},
-    "languages.languages": {"value": ["..."], "confidence": 0.0},
-    "languages.language_levels": {"value": ["..."], "confidence": 0.0}
-  }
-}
+  }},
+  "candidate_fields": {{
+    "identity.current_location": {{"value": "...", "confidence": 0.0}},
+    "identity.preferred_workday": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.primary_role": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.years_experience": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.seniority": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.sectors": {{"value": "...", "confidence": 0.0}},
+    "professional_profile.main_responsibilities": {{"value": ["..."], "confidence": 0.0}},
+    "skills.technical_skills": {{"value": ["..."], "confidence": 0.0}},
+    "skills.tools": {{"value": ["..."], "confidence": 0.0}},
+    "skills.soft_skills": {{"value": ["..."], "confidence": 0.0}},
+    "skills.certifications": {{"value": ["..."], "confidence": 0.0}},
+    "education.highest_level": {{"value": "...", "confidence": 0.0}},
+    "education.degrees": {{"value": ["..."], "confidence": 0.0}},
+    "education.education_center": {{"value": "...", "confidence": 0.0}},
+    "education.specialization": {{"value": "...", "confidence": 0.0}},
+    "education.graduation_date": {{"value": "...", "confidence": 0.0}},
+    "education.ongoing_education": {{"value": "...", "confidence": 0.0}},
+    "languages.languages": {{"value": ["..."], "confidence": 0.0}},
+    "languages.language_levels": {{"value": ["..."], "confidence": 0.0}}
+  }}
+}}
 
 Rules:
 - Omit fields whose answer is not present or strongly supported by the CV.
@@ -292,7 +292,6 @@ async def _analyze_with_llm(text: str) -> dict[str, Any]:
             )
         ],
         options={"temperature": 0, "max_completion_tokens": 1800},
-        format="json",
     )
     async with AIModelClient() as client:
         response = await client.chat(request)

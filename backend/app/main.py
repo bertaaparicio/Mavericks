@@ -6,6 +6,26 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+
+def _load_env(path: Path | None = None) -> None:
+    """Load a .env file into os.environ without external dependencies."""
+    if path is None:
+        path = Path(__file__).resolve().parents[2] / ".env"
+    if not path.is_file():
+        return
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip("\"'")
+            os.environ.setdefault(key, value)
+
+
+_load_env()
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
