@@ -16,6 +16,7 @@ def test_extract_text_from_pdf_returns_string() -> None:
 
 def test_extract_text_from_pdf_handles_invalid_pdf() -> None:
     import pytest
+
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
         tmp.write(b"not a real pdf content")
         tmp_path = tmp.name

@@ -50,7 +50,9 @@ class QASession:
         self.session_id = uuid.uuid4().hex[:12]
         self.cv_text = cv_text
         self.messages: list[ChatMessage] = [
-            ChatMessage(role="user", content=f"Here is the CV text to analyze:\n\n{cv_text}"),
+            ChatMessage(
+                role="user", content=f"Here is the CV text to analyze:\n\n{cv_text}"
+            ),
         ]
         self.profile: dict[str, Any] | None = None
         self.is_complete = False
@@ -75,20 +77,28 @@ class QAService:
         session = QASession(cv_text)
         self.sessions[session.session_id] = session
 
-        response = await self.client.chat(ChatRequest(
-            messages=session.messages,
-            system=SYSTEM_PROMPT,
-        ))
+        response = await self.client.chat(
+            ChatRequest(
+                messages=session.messages,
+                system=SYSTEM_PROMPT,
+            )
+        )
 
         parsed = self._parse_response(response.content)
         if parsed["type"] == "question":
             session.current_question = parsed["question"]
-            session.messages.append(ChatMessage(role="assistant", content=response.content))
+            session.messages.append(
+                ChatMessage(role="assistant", content=response.content)
+            )
         elif parsed["type"] == "profile":
             session.profile = parsed["profile"]
             session.is_complete = True
 
-        logger.info("Q&A session %s initialized, question: %s", session.session_id, session.current_question)
+        logger.info(
+            "Q&A session %s initialized, question: %s",
+            session.session_id,
+            session.current_question,
+        )
         return session
 
     async def process_answer(self, session_id: str, answer: str) -> QASession:
@@ -101,15 +111,19 @@ class QAService:
 
         session.messages.append(ChatMessage(role="user", content=answer))
 
-        response = await self.client.chat(ChatRequest(
-            messages=session.messages,
-            system=SYSTEM_PROMPT,
-        ))
+        response = await self.client.chat(
+            ChatRequest(
+                messages=session.messages,
+                system=SYSTEM_PROMPT,
+            )
+        )
 
         parsed = self._parse_response(response.content)
         if parsed["type"] == "question":
             session.current_question = parsed["question"]
-            session.messages.append(ChatMessage(role="assistant", content=response.content))
+            session.messages.append(
+                ChatMessage(role="assistant", content=response.content)
+            )
         elif parsed["type"] == "profile":
             session.profile = parsed["profile"]
             session.is_complete = True
@@ -117,7 +131,9 @@ class QAService:
 
         logger.info(
             "Q&A session %s: complete=%s, question=%s",
-            session_id, session.is_complete, session.current_question,
+            session_id,
+            session.is_complete,
+            session.current_question,
         )
         return session
 
@@ -129,11 +145,15 @@ class QAService:
         json_block = content
         if "```" in content:
             import re
+
             match = re.search(r"```(?:json)?\s*\n?(.*?)\n?```", content, re.DOTALL)
             if match:
                 json_block = match.group(1).strip()
         try:
             return json.loads(json_block)
         except json.JSONDecodeError:
-            logger.warning("Failed to parse LLM response as JSON, treating as question: %s", content[:200])
+            logger.warning(
+                "Failed to parse LLM response as JSON, treating as question: %s",
+                content[:200],
+            )
             return {"type": "question", "question": content}

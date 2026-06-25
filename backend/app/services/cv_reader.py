@@ -16,62 +16,203 @@ from pathlib import Path
 from docx import Document
 from pypdf import PdfReader
 
-from backend.services.checklist_service import build_checklist
-from backend.services.cv_improvement_service import evaluate_cv_improvements
+from app.services.checklist_service import build_checklist
+from app.services.cv_improvement_service import evaluate_cv_improvements
 
 
 MAX_FILE_SIZE = 10 * 1024 * 1024
 ALLOWED_EXTENSIONS = {".pdf", ".docx"}
 
 SECTION_WORDS = {
-    "experiència": ("experiència", "experiencia", "experience", "employment", "work history"),
-    "formació": ("formació", "formacion", "formación", "education", "estudis", "studies"),
-    "habilitats": ("habilitats", "habilidades", "skills", "competències", "competencias"),
+    "experiència": (
+        "experiència",
+        "experiencia",
+        "experience",
+        "employment",
+        "work history",
+    ),
+    "formació": (
+        "formació",
+        "formacion",
+        "formación",
+        "education",
+        "estudis",
+        "studies",
+    ),
+    "habilitats": (
+        "habilitats",
+        "habilidades",
+        "skills",
+        "competències",
+        "competencias",
+    ),
     "idiomes": ("idiomes", "idiomas", "languages"),
     "projectes": ("projectes", "proyectos", "projects"),
 }
 
 SKILLS = (
-    "Python", "Java", "JavaScript", "TypeScript", "HTML", "CSS", "React", "Angular",
-    "Vue", "Node.js", "FastAPI", "Django", "Flask", "Spring", "SQL", "MySQL",
-    "PostgreSQL", "MongoDB", "Git", "GitHub", "Docker", "Kubernetes", "AWS",
-    "Azure", "Excel", "Power BI", "Tableau", "Figma", "Photoshop", "Illustrator",
-    "Scrum", "Agile", "Machine Learning", "Intel·ligència Artificial", "AI",
-    "Data Analysis", "Anàlisi de dades", "Atenció al client", "Vendes", "Marketing",
-    "SEO", "Comunicació", "Lideratge", "Treball en equip",
+    "Python",
+    "Java",
+    "JavaScript",
+    "TypeScript",
+    "HTML",
+    "CSS",
+    "React",
+    "Angular",
+    "Vue",
+    "Node.js",
+    "FastAPI",
+    "Django",
+    "Flask",
+    "Spring",
+    "SQL",
+    "MySQL",
+    "PostgreSQL",
+    "MongoDB",
+    "Git",
+    "GitHub",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Azure",
+    "Excel",
+    "Power BI",
+    "Tableau",
+    "Figma",
+    "Photoshop",
+    "Illustrator",
+    "Scrum",
+    "Agile",
+    "Machine Learning",
+    "Intel·ligència Artificial",
+    "AI",
+    "Data Analysis",
+    "Anàlisi de dades",
+    "Atenció al client",
+    "Vendes",
+    "Marketing",
+    "SEO",
+    "Comunicació",
+    "Lideratge",
+    "Treball en equip",
 )
 
 LANGUAGES = (
-    "català", "catalan", "castellà", "español", "spanish", "anglès", "inglés",
-    "english", "francès", "francés", "french", "alemany", "alemán", "german",
-    "italià", "italiano", "portuguès", "portugués",
+    "català",
+    "catalan",
+    "castellà",
+    "español",
+    "spanish",
+    "anglès",
+    "inglés",
+    "english",
+    "francès",
+    "francés",
+    "french",
+    "alemany",
+    "alemán",
+    "german",
+    "italià",
+    "italiano",
+    "portuguès",
+    "portugués",
 )
 
 DEGREE_MARKERS = (
-    "grau", "grado", "degree", "màster", "máster", "master", "batxillerat",
-    "bachillerato", "formació professional", "formación profesional", "cicle",
-    "ciclo formativo", "fp ", "universitat", "universidad", "university",
+    "grau",
+    "grado",
+    "degree",
+    "màster",
+    "máster",
+    "master",
+    "batxillerat",
+    "bachillerato",
+    "formació professional",
+    "formación profesional",
+    "cicle",
+    "ciclo formativo",
+    "fp ",
+    "universitat",
+    "universidad",
+    "university",
 )
 
 STOPWORDS = {
-    "amb", "per", "una", "del", "dels", "les", "els", "que", "the", "and", "for",
-    "with", "from", "this", "that", "para", "con", "por", "las", "los", "com",
-    "més", "años", "anys", "year", "years", "sobre", "entre", "també", "tambien",
-    "professional", "experiencia", "experiència", "experience", "formació",
-    "formación", "education", "curriculum", "vitae",
+    "amb",
+    "per",
+    "una",
+    "del",
+    "dels",
+    "les",
+    "els",
+    "que",
+    "the",
+    "and",
+    "for",
+    "with",
+    "from",
+    "this",
+    "that",
+    "para",
+    "con",
+    "por",
+    "las",
+    "los",
+    "com",
+    "més",
+    "años",
+    "anys",
+    "year",
+    "years",
+    "sobre",
+    "entre",
+    "també",
+    "tambien",
+    "professional",
+    "experiencia",
+    "experiència",
+    "experience",
+    "formació",
+    "formación",
+    "education",
+    "curriculum",
+    "vitae",
 }
 
 SOFT_SKILLS = (
-    "Comunicació", "Lideratge", "Treball en equip", "Comunicación", "Liderazgo",
-    "Trabajo en equipo", "Communication", "Leadership", "Teamwork",
-    "Resolució de problemes", "Resolución de problemas", "Problem solving",
-    "Creativitat", "Creatividad", "Creativity", "Organització", "Organización",
-    "Organization", "Adaptabilitat", "Adaptabilidad", "Adaptability",
+    "Comunicació",
+    "Lideratge",
+    "Treball en equip",
+    "Comunicación",
+    "Liderazgo",
+    "Trabajo en equipo",
+    "Communication",
+    "Leadership",
+    "Teamwork",
+    "Resolució de problemes",
+    "Resolución de problemas",
+    "Problem solving",
+    "Creativitat",
+    "Creatividad",
+    "Creativity",
+    "Organització",
+    "Organización",
+    "Organization",
+    "Adaptabilitat",
+    "Adaptabilidad",
+    "Adaptability",
 )
 
 CERTIFICATION_MARKERS = (
-    "certificació", "certificación", "certification", "certificat", "certificado",
-    "certificate", "acreditació", "acreditación", "accreditation",
+    "certificació",
+    "certificación",
+    "certification",
+    "certificat",
+    "certificado",
+    "certificate",
+    "acreditació",
+    "acreditación",
+    "accreditation",
 )
 
 LANGUAGE_LEVEL_PATTERN = re.compile(
@@ -144,7 +285,9 @@ TEXTS = {
 }
 
 
-def extract_text(filename: str, content: bytes, language: str = "ca") -> tuple[str, dict]:
+def extract_text(
+    filename: str, content: bytes, language: str = "ca"
+) -> tuple[str, dict]:
     language = language if language in TEXTS else "ca"
     labels = TEXTS[language]
     extension = Path(filename).suffix.lower()
@@ -218,14 +361,19 @@ def analyse_cv(filename: str, content: bytes, language: str = "ca") -> dict:
     phones = _unique(re.findall(r"(?:\+\d{1,3}[\s.-]?)?(?:\d[\s.-]?){8,12}", text))
     links = _unique(re.findall(r"(?:https?://|www\.)\S+|linkedin\.com/\S+", text, re.I))
     skills = [skill for skill in SKILLS if _contains_term(text, skill)]
-    languages = [language.title() for language in LANGUAGES if _contains_term(text, language)]
+    languages = [
+        language.title() for language in LANGUAGES if _contains_term(text, language)
+    ]
     education = _matching_lines(lines, DEGREE_MARKERS, limit=4)
     dated_lines = [
-        line for line in lines
-        if re.search(r"\b(?:19|20)\d{2}\b", line) or re.search(r"\b\d{1,2}/\d{4}\b", line)
+        line
+        for line in lines
+        if re.search(r"\b(?:19|20)\d{2}\b", line)
+        or re.search(r"\b\d{1,2}/\d{4}\b", line)
     ][:6]
     sections = [
-        name for name, markers in SECTION_WORDS.items()
+        name
+        for name, markers in SECTION_WORDS.items()
         if any(_contains_term(text, marker) for marker in markers)
     ]
 
@@ -242,7 +390,9 @@ def analyse_cv(filename: str, content: bytes, language: str = "ca") -> dict:
         highlights = _fallback_highlights(lines, labels)
 
     candidate_name = _guess_name(lines)
-    profile_sentence = _profile_summary(candidate_name, skills, education, dated_lines, labels)
+    profile_sentence = _profile_summary(
+        candidate_name, skills, education, dated_lines, labels
+    )
     keywords = _top_keywords(text, limit=8)
     extracted_profile = _build_extracted_profile(
         text=text,
@@ -290,10 +440,14 @@ def _contains_term(text: str, term: str) -> bool:
     return bool(re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text, re.I))
 
 
-def _matching_lines(lines: list[str], markers: tuple[str, ...], limit: int) -> list[str]:
+def _matching_lines(
+    lines: list[str], markers: tuple[str, ...], limit: int
+) -> list[str]:
     matches = []
     for line in lines:
-        if 5 < len(line) < 180 and any(_contains_term(line, marker) for marker in markers):
+        if 5 < len(line) < 180 and any(
+            _contains_term(line, marker) for marker in markers
+        ):
             matches.append(line)
     return _unique(matches)[:limit]
 
@@ -304,7 +458,10 @@ def _guess_name(lines: list[str]) -> str:
             1 < len(line.split()) <= 5
             and len(line) < 60
             and not re.search(r"[@:/\d]", line)
-            and not any(word in line.lower() for word in ("curriculum", "currículum", "resume", "perfil"))
+            and not any(
+                word in line.lower()
+                for word in ("curriculum", "currículum", "resume", "perfil")
+            )
         ):
             return line.title() if line.isupper() else line
     return ""
@@ -343,8 +500,11 @@ def _build_extracted_profile(
     add("identity.email", emails[0] if emails else None, 0.99)
     add("identity.phone", phones[0] if phones else None, 0.94)
     professional_links = [
-        link for link in links
-        if "linkedin" in link.lower() or "portfolio" in link.lower() or "github" in link.lower()
+        link
+        for link in links
+        if "linkedin" in link.lower()
+        or "portfolio" in link.lower()
+        or "github" in link.lower()
     ]
     add(
         "identity.linkedin_or_portfolio",
@@ -372,10 +532,13 @@ def _build_extracted_profile(
     add("education.degrees", education, 0.85)
     add("education.highest_level", education[0] if education else None, 0.55)
     education_dates = [
-        line for line in education
-        if re.search(r"\b(?:19|20)\d{2}\b", line)
+        line for line in education if re.search(r"\b(?:19|20)\d{2}\b", line)
     ]
-    add("education.graduation_date", education_dates[0] if education_dates else None, 0.55)
+    add(
+        "education.graduation_date",
+        education_dates[0] if education_dates else None,
+        0.55,
+    )
 
     add("languages.languages", languages, 0.88)
     language_levels = _extract_language_levels(lines, languages)
@@ -388,8 +551,16 @@ def _guess_primary_role(lines: list[str], candidate_name: str) -> str:
     """Busca una línia breu de titular professional prop de l'inici del CV."""
 
     excluded = {
-        candidate_name.casefold(), "experiència", "experiencia", "experience",
-        "formació", "formación", "education", "idiomes", "idiomas", "languages",
+        candidate_name.casefold(),
+        "experiència",
+        "experiencia",
+        "experience",
+        "formació",
+        "formación",
+        "education",
+        "idiomes",
+        "idiomas",
+        "languages",
     }
     for line in lines[:12]:
         normalized = line.casefold()
@@ -426,7 +597,11 @@ def _extract_language_levels(lines: list[str], languages: list[str]) -> list[str
 
 
 def _profile_summary(
-    name: str, skills: list[str], education: list[str], dated_lines: list[str], labels: dict
+    name: str,
+    skills: list[str],
+    education: list[str],
+    dated_lines: list[str],
+    labels: dict,
 ) -> str:
     subject = name or labels["subject"]
     details = []
@@ -438,13 +613,16 @@ def _profile_summary(
         details.append(labels["timeline_detail"])
 
     if details:
-        return labels["summary"].format(subject=subject, details=labels["joiner"].join(details))
+        return labels["summary"].format(
+            subject=subject, details=labels["joiner"].join(details)
+        )
     return labels["summary_empty"].format(subject=subject)
 
 
 def _fallback_highlights(lines: list[str], labels: dict) -> list[str]:
     useful = [
-        line for line in lines
+        line
+        for line in lines
         if 35 <= len(line) <= 180 and not re.search(r"@|https?://|www\.", line, re.I)
     ]
     return useful[:4] or [labels["fallback"]]

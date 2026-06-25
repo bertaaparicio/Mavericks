@@ -1,13 +1,17 @@
 """Punt d'entrada únic per executar TalentMatch AI.
 
-Mantenim aquest fitxer petit expressament. Tot el servidor viu al paquet
-``backend`` i, per tant, l'aplicació continua arrencant amb una ordre senzilla:
+Mantenim aquest fitxer petit expressament. L'aplicació arrenca el servidor FastAPI mitjançant:
 
     python main.py
 """
 
-from backend.server import run
-
+import uvicorn
 
 if __name__ == "__main__":
-    run()
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        app_dir="backend",
+    )

@@ -79,7 +79,9 @@ def _parse_yaml_kv(text: str) -> dict[str, Any]:
             val = match.group(2).strip().strip("\"'")
             if val and val.lower() != "none" and val.lower() != "null":
                 if key == "job_title_keywords" or key.endswith("skills"):
-                    result[key] = [v.strip().strip("\"'") for v in val.split(",") if v.strip()]
+                    result[key] = [
+                        v.strip().strip("\"'") for v in val.split(",") if v.strip()
+                    ]
                 else:
                     result[key] = val
     return result

@@ -146,7 +146,9 @@ class DatabaseConnection:
             employment_type=employment_type,
         )
         keywords_count = len(job_title_keywords) if job_title_keywords else 0
-        max_possible = (fields_provided * SCORE_FIELD_MATCH) + (keywords_count * SCORE_KEYWORD_MATCH)
+        max_possible = (fields_provided * SCORE_FIELD_MATCH) + (
+            keywords_count * SCORE_KEYWORD_MATCH
+        )
 
         def _score(row: dict[str, Any]) -> int:
             score = 0
@@ -226,13 +228,17 @@ def query_jobs(
 
     lines = ["Ranked Job Matches (highest score first):", ""]
     for i, row in enumerate(results, 1):
+        lines.append(f"{i}. {row['job_title']}")
         lines.append(
-            f"{i}. {row['job_title']}"
+            f"   Company: {row['company_name']}  |  Match Score: {row['match_score']} ({row['match_ratio']}%)"
         )
-        lines.append(f"   Company: {row['company_name']}  |  Match Score: {row['match_score']} ({row['match_ratio']}%)")
         lines.append(f"   Location: {row['location']}")
-        lines.append(f"   Seniority: {row['seniority_level']}  |  Function: {row['job_function']}")
-        lines.append(f"   Employment: {row['employment_type']}  |  Industry: {row['industry']}")
+        lines.append(
+            f"   Seniority: {row['seniority_level']}  |  Function: {row['job_function']}"
+        )
+        lines.append(
+            f"   Employment: {row['employment_type']}  |  Industry: {row['industry']}"
+        )
         lines.append("")
 
     return "\n".join(lines)

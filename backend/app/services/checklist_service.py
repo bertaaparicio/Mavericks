@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "cv_checklist.json"
+CONFIG_PATH = Path(__file__).resolve().parents[2] / "config" / "cv_checklist.json"
 
 
 def load_checklist_definition() -> dict[str, Any]:

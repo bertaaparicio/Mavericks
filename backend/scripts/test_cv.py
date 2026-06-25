@@ -51,21 +51,41 @@ CV TEXT:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Analyze a CV and match against job offers.")
+    parser = argparse.ArgumentParser(
+        description="Analyze a CV and match against job offers."
+    )
     parser.add_argument("pdf_path", type=str, help="Path to the CV PDF file")
-    parser.add_argument("--model", type=str, default=None, help="Ollama model name (default: from .env or gpt-oss:20b)")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Ollama model name (default: from .env or gpt-oss:20b)",
+    )
     return parser.parse_args()
 
 
 async def analyze_cv(cv_text: str, model: str | None = None) -> str:
     settings = OllamaSettings.from_env()
     if model:
-        settings = OllamaSettings(model=model, host=settings.host, timeout=settings.timeout, keep_alive=settings.keep_alive)
-    logger.info("Sending CV to Ollama (model=%s, %d chars)...", settings.model, len(cv_text))
+        settings = OllamaSettings(
+            model=model,
+            host=settings.host,
+            timeout=settings.timeout,
+            keep_alive=settings.keep_alive,
+        )
+    logger.info(
+        "Sending CV to Ollama (model=%s, %d chars)...", settings.model, len(cv_text)
+    )
     async with AIModelClient(settings=settings) as client:
-        response = await client.chat(ChatRequest(
-            messages=[ChatMessage(role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text))],
-        ))
+        response = await client.chat(
+            ChatRequest(
+                messages=[
+                    ChatMessage(
+                        role="user", content=CV_ANALYSIS_PROMPT.format(cv_text=cv_text)
+                    )
+                ],
+            )
+        )
     return response.content
 
 
@@ -77,14 +97,14 @@ def main() -> None:
         print(f"Error: file not found: {pdf_path}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  CV: {pdf_path.name}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Step 1: Extract text
     print("1. Extracting text from PDF...")
     cv_text = extract_text_from_pdf(str(pdf_path))
-    
+
     if not cv_text.strip():
         print("   ERROR: PDF is empty or could not be parsed", file=sys.stderr)
         sys.exit(1)
@@ -129,17 +149,21 @@ def main() -> None:
     print(f"   Found {len(results)} matching jobs\n")
 
     # Step 5: Display results
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  TOP {len(results)} MATCHING JOBS")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     for i, job in enumerate(results, 1):
         print(f"  {i}. {job['job_title']}")
         print(f"     Company:  {job['company_name']}")
         print(f"     Location: {job['location']}")
         print(f"     Score:    {job['match_score']} pts  ({job['match_ratio']}% match)")
-        print(f"     Seniority: {job['seniority_level']}  |  Function: {job['job_function']}")
-        print(f"     Type:     {job['employment_type']}  |  Industry: {job['industry']}")
+        print(
+            f"     Seniority: {job['seniority_level']}  |  Function: {job['job_function']}"
+        )
+        print(
+            f"     Type:     {job['employment_type']}  |  Industry: {job['industry']}"
+        )
         print()
 
 

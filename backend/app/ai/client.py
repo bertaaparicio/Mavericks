@@ -57,11 +57,14 @@ class AIModelClient:
     def _get_groq_client(self) -> Any | None:
         if self._groq_client is None:
             from app.ai.groq_client import GroqModelClient
+
             api_key = os.getenv("GROQ_API_KEY")
             if api_key:
                 self._groq_client = GroqModelClient(api_key=api_key)
             else:
-                logger.warning("Groq API key not found in environment; fallback to Groq will be disabled.")
+                logger.warning(
+                    "Groq API key not found in environment; fallback to Groq will be disabled."
+                )
         return self._groq_client
 
     async def __aenter__(self) -> "AIModelClient":
@@ -188,7 +191,9 @@ class AIModelClient:
                 if content:
                     yield content
         except _OLLAMA_EXCEPTIONS as exc:
-            logger.warning("Ollama stream_chat failed: %s. Falling back to Groq...", exc)
+            logger.warning(
+                "Ollama stream_chat failed: %s. Falling back to Groq...", exc
+            )
             use_fallback = True
             fallback_exc = exc
 
@@ -290,7 +295,9 @@ class AIModelClient:
                 if content:
                     yield content
         except _OLLAMA_EXCEPTIONS as exc:
-            logger.warning("Ollama stream_generate failed: %s. Falling back to Groq...", exc)
+            logger.warning(
+                "Ollama stream_generate failed: %s. Falling back to Groq...", exc
+            )
             use_fallback = True
             fallback_exc = exc
 
@@ -329,16 +336,20 @@ class AIModelClient:
             except OllamaModelError as exc:
                 last_exc = exc
                 if attempt < self._max_retries - 1:
-                    delay = min(_BASE_DELAY * (2 ** attempt), _MAX_DELAY)
+                    delay = min(_BASE_DELAY * (2**attempt), _MAX_DELAY)
                     logger.warning(
                         "Ollama request failed (attempt %d/%d), retrying in %.1fs: %s",
-                        attempt + 1, self._max_retries, delay, exc,
+                        attempt + 1,
+                        self._max_retries,
+                        delay,
+                        exc,
                     )
                     await asyncio.sleep(delay)
                 else:
                     logger.error(
                         "Ollama request failed after %d attempts: %s",
-                        self._max_retries, exc,
+                        self._max_retries,
+                        exc,
                     )
         raise last_exc  # type: ignore[misc]
 

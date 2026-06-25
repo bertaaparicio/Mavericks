@@ -10,6 +10,7 @@ const copy = {
     recommendation: "Recomendación",
     evidence: "Fragmentos detectados",
     pro: "FUNCIÓN PRO",
+    cta: "Mejora tu CV con IA",
   },
   ca: {
     eyebrow: "AUDITORIA PRO DEL CV",
@@ -22,6 +23,7 @@ const copy = {
     recommendation: "Recomanació",
     evidence: "Fragments detectats",
     pro: "FUNCIÓ PRO",
+    cta: "Millora el teu CV amb IA",
   },
   en: {
     eyebrow: "PRO RÉSUMÉ AUDIT",
@@ -34,6 +36,7 @@ const copy = {
     recommendation: "Recommendation",
     evidence: "Detected excerpts",
     pro: "PRO FEATURE",
+    cta: "Improve your résumé with AI",
   },
 };
 
@@ -52,6 +55,9 @@ export function CvImprovementAudit({ audit, language }) {
           <span>{t.eyebrow}</span>
           <h2>{t.title}</h2>
           <p>{t.description}</p>
+          <button className="button button--candidate cv-audit__cta" type="button">
+            {t.cta}
+          </button>
         </div>
         <div className="cv-audit__score">
           <strong>{audit.score}</strong>
