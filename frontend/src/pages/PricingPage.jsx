@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { BackButton } from "../components/BackButton";
 import { Footer } from "../components/Footer";
@@ -28,8 +29,15 @@ const translations = {
     pro: {
       name: "PRO",
       description: "Para quien busca empleo activamente y quiere resultados más rápidos.",
-      price: "4,99 €",
-      period: "al mes",
+      monthly: "Mensual",
+      annual: "Anual",
+      save: "· Ahorra 40%",
+      priceMonthly: "9,99 €",
+      priceAnnual: "5,99 €",
+      periodMonthly: "al mes",
+      periodAnnual: "al mes, facturado anualmente",
+      noteMonthly: "Sin compromiso · Cancela cuando quieras.",
+      noteAnnual: "Facturado anualmente.",
       cta: "Elegir plan PRO",
       features: [
         "Análisis ilimitados y score detallado.",
@@ -76,8 +84,15 @@ const translations = {
     pro: {
       name: "PRO",
       description: "Per a qui busca feina activament i vol resultats més ràpids.",
-      price: "4,99 €",
-      period: "al mes",
+      monthly: "Mensual",
+      annual: "Anual",
+      save: "· Estalvia 40%",
+      priceMonthly: "9,99 €",
+      priceAnnual: "5,99 €",
+      periodMonthly: "al mes",
+      periodAnnual: "al mes, facturat anualment",
+      noteMonthly: "Sense compromís · Cancel·la quan vulguis.",
+      noteAnnual: "Facturat anualment.",
       cta: "Triar el pla PRO",
       features: [
         "Anàlisis il·limitades i score detallat.",
@@ -124,8 +139,15 @@ const translations = {
     pro: {
       name: "PRO",
       description: "For active job seekers who want faster results.",
-      price: "€4.99",
-      period: "per month",
+      monthly: "Monthly",
+      annual: "Annual",
+      save: "· Save 40%",
+      priceMonthly: "€9.99",
+      priceAnnual: "€5.99",
+      periodMonthly: "per month",
+      periodAnnual: "per month, billed annually",
+      noteMonthly: "No commitment · Cancel at any time.",
+      noteAnnual: "Billed annually.",
       cta: "Choose PRO",
       features: [
         "Unlimited analyses and detailed scores.",
@@ -151,30 +173,65 @@ const translations = {
   },
 };
 
-function PricingCard({ plan, featured, badge }) {
+function PricingCard({ plan, featured, billing, onToggle, labels }) {
+  const isAnnual = billing === "annual";
+  const price = featured
+    ? isAnnual ? plan.priceAnnual : plan.priceMonthly
+    : plan.price;
+  const period = featured
+    ? isAnnual ? plan.periodAnnual : plan.periodMonthly
+    : plan.period;
+  const note = featured
+    ? isAnnual ? plan.noteAnnual : plan.noteMonthly
+    : plan.note;
+
   return (
     <article className={`pricing-card ${featured ? "pricing-card--featured" : ""}`}>
-      {featured && <span className="pricing-card__badge">{badge}</span>}
+
       <div className="pricing-card__heading">
-        <h2>{plan.name}</h2>
+        <div className="pricing-card__title-row">
+          <h2>{plan.name}</h2>
+          
+          {featured && (
+            <div className="pricing-card__toggle">
+              <button
+                className={`pricing-toggle__btn ${!isAnnual ? "is-active" : ""}`}
+                onClick={() => onToggle("monthly")}
+              >
+                {labels.monthly}
+              </button>
+              <button
+                className={`pricing-toggle__btn ${isAnnual ? "is-active" : ""}`}
+                onClick={() => onToggle("annual")}
+              >
+                {labels.annual} <span className="pricing-toggle__save">{labels.save}</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         <p>{plan.description}</p>
       </div>
+
       <div className="pricing-card__price">
-        <strong>{plan.price}</strong>
-        <span>{plan.period}</span>
+        <strong>{price}</strong>
+        <span>{period}</span>
       </div>
+
       <ul>
         {plan.features.map((feature) => (
           <li key={feature}>{feature}</li>
         ))}
       </ul>
+
       <Link
         className={`button ${featured ? "button--candidate" : "button--outline"}`}
         to="/candidate"
       >
         {plan.cta}
       </Link>
-      <small>{plan.note}</small>
+
+      <small>{note}</small>
     </article>
   );
 }
@@ -182,29 +239,32 @@ function PricingCard({ plan, featured, badge }) {
 export function PricingPage() {
   const { language } = useLanguage();
   const t = translations[language];
+  const [billing, setBilling] = useState("annual");
 
   return (
     <div className="pricing-page">
       <Header portal="pricing" />
       <main className="pricing-main">
         <BackButton language={language} />
-
         <section className="pricing-hero">
           <span>{t.eyebrow}</span>
           <h1>{t.title}</h1>
           <p>{t.subtitle}</p>
         </section>
-
         <section className="pricing-grid" aria-label={t.eyebrow}>
           <PricingCard plan={t.free} />
-          <PricingCard plan={t.pro} featured badge={t.recommended} />
+          <PricingCard
+            plan={t.pro}
+            featured
+            billing={billing}
+            onToggle={setBilling}
+            labels={{ monthly: t.pro.monthly, annual: t.pro.annual, save: t.pro.save }}
+          />
         </section>
-
         <section className="pricing-explanation">
           <h2>{t.compareTitle}</h2>
           <p>{t.compareText}</p>
         </section>
-
         <section className="pricing-ethics">
           <div className="pricing-ethics__intro">
             <span>TalentMatch AI</span>

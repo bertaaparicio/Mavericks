@@ -1365,18 +1365,6 @@ p {
   border: 2px solid var(--purple);
   box-shadow: 0 24px 65px rgba(161, 0, 255, 0.15);
 }
-.pricing-card__badge {
-  position: absolute;
-  top: 20px;
-  right: 22px;
-  padding: 7px 10px;
-  color: #fff;
-  border-radius: 999px;
-  background: var(--purple);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.9px;
-}
 .pricing-card__heading h2 {
   margin: 0 0 9px;
   font-family: "Manrope", sans-serif;
@@ -1500,6 +1488,43 @@ p {
   color: #aaa;
   font-size: 13px;
   line-height: 1.55;
+}
+.pricing-card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.pricing-card__toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: #e9e9f0;
+  border-radius: 999px;
+  padding: 0.15rem;
+}
+.pricing-toggle__btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  color: #555;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.pricing-toggle__btn.is-active {
+  background: white;
+  color: #1a1a2e;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.pricing-toggle__save {
+  color: #7c3aed;
+  font-weight: 700;
+  margin-left: 0.3rem;
 }
 .login-main {
   width: min(1100px, calc(100% - 40px));
