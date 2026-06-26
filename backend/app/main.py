@@ -426,11 +426,18 @@ async def _search_jobs(profile: dict) -> list[JobMatchResult]:
 
 
 def _frontend_root() -> Path | None:
-    candidates = [
-        Path(__file__).resolve().parents[3] / "frontend" / "dist",
-        Path("/app/frontend/dist"),
-    ]
-    return next((candidate for candidate in candidates if candidate.is_dir()), None)
+    module_path = Path(__file__).resolve()
+    search_roots = [module_path.parent, *module_path.parents]
+
+    for base_dir in search_roots:
+        candidate = base_dir / "frontend" / "dist"
+        if candidate.is_dir():
+            return candidate
+
+    return next(
+        (candidate for candidate in [Path("/app/frontend/dist")] if candidate.is_dir()),
+        None,
+    )
 
 
 @app.get("/{full_path:path}", include_in_schema=False)
