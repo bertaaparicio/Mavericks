@@ -54,10 +54,14 @@ const copy = {
 export function JobMatches({ jobs = [], language, plan }) {
   const t = copy[language];
   const [minimumScore, setMinimumScore] = useState(50);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const visibleJobs = useMemo(
     () => jobs.filter((job) => Number(job.match_ratio || 0) >= minimumScore),
     [jobs, minimumScore],
   );
+
+  const activeJob = visibleJobs[selectedIndex] || visibleJobs[0] || null;
 
   return (
     <section className="job-matches">
@@ -74,60 +78,110 @@ export function JobMatches({ jobs = [], language, plan }) {
             max="100"
             step="5"
             value={minimumScore}
-            onChange={(event) => setMinimumScore(Number(event.target.value))}
+            onChange={(event) => {
+              setMinimumScore(Number(event.target.value));
+              setSelectedIndex(0);
+            }}
           />
         </label>
       </div>
 
       {visibleJobs.length ? (
-        <div className="job-matches__grid">
-          {visibleJobs.map((job, index) => (
-            <article className="job-match-card" key={`${job.company_name}-${job.job_title}-${index}`}>
-              <div className="job-match-card__score">
-                <strong>{Math.round(job.match_ratio || 0)}%</strong>
-                <span>match</span>
+        <div className="job-matches__glassdoor-layout">
+          {/* Left panel: List of job previews */}
+          <div className="job-matches__list-pane">
+            {visibleJobs.map((job, index) => {
+              const isActive = index === selectedIndex;
+              return (
+                <div
+                  className={`job-item-card ${isActive ? "is-active" : ""}`}
+                  key={`${job.company_name}-${job.job_title}-${index}`}
+                  onClick={() => setSelectedIndex(index)}
+                >
+                  <div className="job-item-card__header">
+                    <div className="job-item-card__score-badge">
+                      <strong>{Math.round(job.match_ratio || 0)}%</strong>
+                    </div>
+                    <div className="job-item-card__meta">
+                      <h4>{job.job_title}</h4>
+                      <span className="job-item-card__company">{job.company_name || "—"}</span>
+                    </div>
+                  </div>
+                  <div className="job-item-card__details-row">
+                    <span>📍 {job.location || "—"}</span>
+                    <span>💼 {job.seniority_level || "—"}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right panel: Active job details */}
+          {activeJob ? (
+            <div className="job-matches__details-pane">
+              <div className="job-details-header">
+                <div className="job-details-header__main">
+                  <h2>{activeJob.job_title}</h2>
+                  <div className="job-details-header__subtitle">{activeJob.company_name}</div>
+                  <div className="job-details-metadata">
+                    <span>📍 {activeJob.location || "—"}</span>
+                    <span>💼 {activeJob.seniority_level || "—"}</span>
+                    <span>⏰ {activeJob.employment_type || "—"}</span>
+                    <span>🏭 {activeJob.industry || "—"}</span>
+                  </div>
+                </div>
+                <div className="job-details-header__match">
+                  <div className="match-circle">
+                    <strong>{Math.round(activeJob.match_ratio || 0)}%</strong>
+                    <span>match</span>
+                  </div>
+                </div>
               </div>
-              <h3>{job.job_title}</h3>
-              <dl>
-                <div><dt>{t.company}</dt><dd>{job.company_name || "—"}</dd></div>
-                <div><dt>{t.location}</dt><dd>{job.location || "—"}</dd></div>
-                <div><dt>{t.seniority}</dt><dd>{job.seniority_level || "—"}</dd></div>
-                <div><dt>{t.type}</dt><dd>{job.employment_type || "—"}</dd></div>
-              </dl>
-              {job.match_explanation && (
-                <div className="job-match-story">
-                  {job.match_explanation.why_it_fits && (
+
+              {activeJob.match_explanation ? (
+                <div className="job-details-body">
+                  {activeJob.match_explanation.why_it_fits && (
                     <div>
                       <strong>{t.why}</strong>
-                      <p>{job.match_explanation.why_it_fits}</p>
+                      <p>{activeJob.match_explanation.why_it_fits}</p>
                     </div>
                   )}
-                  {!!job.match_explanation.strengths?.length && (
+                  {!!activeJob.match_explanation.strengths?.length && (
                     <div>
                       <strong>{t.strengths}</strong>
                       <ul>
-                        {job.match_explanation.strengths.map((item) => <li key={item}>{item}</li>)}
+                        {activeJob.match_explanation.strengths.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
                       </ul>
                     </div>
                   )}
-                  {plan === "pro" && !!job.match_explanation.missing?.length && (
+                  {plan === "pro" && !!activeJob.match_explanation.missing?.length && (
                     <div>
                       <strong>{t.missing}</strong>
                       <ul>
-                        {job.match_explanation.missing.map((item) => <li key={item}>{item}</li>)}
+                        {activeJob.match_explanation.missing.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
                       </ul>
                     </div>
                   )}
-                  {job.match_explanation.final_tip && (
+                  {activeJob.match_explanation.final_tip && (
                     <div>
                       <strong>{t.tip}</strong>
-                      <p>{job.match_explanation.final_tip}</p>
+                      <p>{activeJob.match_explanation.final_tip}</p>
                     </div>
                   )}
                 </div>
+              ) : (
+                <p className="job-matches__empty">{t.empty}</p>
               )}
-            </article>
-          ))}
+            </div>
+          ) : (
+            <div style={{ padding: "40px", textAlign: "center", color: "var(--muted)" }}>
+              {t.empty}
+            </div>
+          )}
         </div>
       ) : (
         <p className="job-matches__empty">{t.empty}</p>

@@ -87,6 +87,13 @@ CV TEXT:
 {cv_text}"""
 
 
+class JobMatchExplanationResult(BaseModel):
+    why_it_fits: str
+    strengths: list[str]
+    missing: list[str]
+    final_tip: str
+
+
 class JobMatchResult(BaseModel):
     job_title: str
     company_name: str
@@ -97,6 +104,7 @@ class JobMatchResult(BaseModel):
     industry: str
     match_score: int
     match_ratio: float
+    match_explanation: JobMatchExplanationResult | None = None
 
 
 class MatchResponse(BaseModel):
@@ -128,6 +136,8 @@ class MatchFromProfileRequest(BaseModel):
     job_function: str | None = None
     industry: str | None = None
     employment_type: str | None = None
+    language: str = "ca"
+    plan: str = "free"
 
 
 class MatchFromProfileResponse(BaseModel):
@@ -261,26 +271,30 @@ async def match_cv(file: UploadFile = File(...)) -> MatchResponse:
 
 
 @app.post("/cv-qa/init", response_model=QAInitResponse)
-async def cv_qa_init(file: UploadFile = File(...)) -> QAInitResponse:
-    suffix = os.path.splitext(file.filename or "cv.pdf")[1]
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+async def cv_qa_init(
+    file: UploadFile = File(...),
+    language: str = Form("ca"),
+) -> QAInitResponse:
+    filename = file.filename or "cv.pdf"
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="The uploaded CV is empty.")
+
     try:
-        content = await file.read()
-        tmp.write(content)
-        tmp.flush()
-        tmp.close()
-        cv_text = extract_text_from_pdf(tmp.name)
+        from app.services.cv_reader import extract_text
+        cv_text, _ = extract_text(filename, content, language)
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err)) from val_err
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to read PDF: {e}")
-    finally:
-        os.unlink(tmp.name)
+        logger.exception("In-memory extraction failed")
+        raise HTTPException(status_code=400, detail=f"Failed to read PDF/DOCX: {e}")
 
     if not cv_text.strip():
         raise HTTPException(
-            status_code=400, detail="PDF is empty or could not be parsed"
+            status_code=400, detail="CV is empty or could not be parsed"
         )
 
-    session = await get_qa_service().init_session(cv_text)
+    session = await get_qa_service().init_session(cv_text, language)
     return QAInitResponse(
         session_id=session.session_id,
         question=session.current_question or "Profile complete.",
@@ -319,8 +333,57 @@ async def cv_qa_status(session_id: str) -> QAAnswerResponse:
 @app.post("/match-from-profile", response_model=MatchFromProfileResponse)
 async def match_from_profile(body: MatchFromProfileRequest) -> MatchFromProfileResponse:
     profile = body.model_dump()
-    jobs = await _search_jobs(profile)
-    return MatchFromProfileResponse(ranked_jobs=jobs)
+    raw_jobs = await _search_jobs(profile)
+
+    from app.services.integrated_cv_service import _explain_job_matches
+    jobs_dicts = [
+        {
+            "job_title": j.job_title,
+            "company_name": j.company_name,
+            "location": j.location,
+            "seniority_level": j.seniority_level,
+            "job_function": j.job_function,
+            "employment_type": j.employment_type,
+            "industry": j.industry,
+            "match_score": j.match_score,
+            "match_ratio": j.match_ratio,
+        }
+        for j in raw_jobs
+    ]
+
+    explained_dicts = await _explain_job_matches(
+        profile=profile,
+        jobs=jobs_dicts,
+        language=body.language,
+        plan=body.plan,
+    )
+
+    ranked_jobs = []
+    for j in explained_dicts:
+        exp = j.get("match_explanation")
+        match_exp = None
+        if exp:
+            match_exp = JobMatchExplanationResult(
+                why_it_fits=exp.get("why_it_fits", ""),
+                strengths=exp.get("strengths") or [],
+                missing=exp.get("missing") or [],
+                final_tip=exp.get("final_tip", ""),
+            )
+        ranked_jobs.append(
+            JobMatchResult(
+                job_title=j.get("job_title", ""),
+                company_name=j.get("company_name", ""),
+                location=j.get("location", ""),
+                seniority_level=j.get("seniority_level", ""),
+                job_function=j.get("job_function", ""),
+                employment_type=j.get("employment_type", ""),
+                industry=j.get("industry", ""),
+                match_score=j.get("match_score", 0),
+                match_ratio=j.get("match_ratio", 0.0),
+                match_explanation=match_exp,
+            )
+        )
+    return MatchFromProfileResponse(ranked_jobs=ranked_jobs)
 
 
 async def _search_jobs(profile: dict) -> list[JobMatchResult]:
