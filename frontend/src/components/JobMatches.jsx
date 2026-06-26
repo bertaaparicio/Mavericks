@@ -25,6 +25,7 @@ const copy = {
     potentialMatchDesc: "Cumples con la base de la oferta. Adapta tu CV para destacar competencias transferibles.",
     freeNote: "El plan PRO mostrará el desglose de requisitos y las competencias que faltan.",
     proNote: "El desglose detallado de requisitos se ha personalizado a partir de tu perfil.",
+    loadingJobs: "Buscando ofertas compatibles...",
   },
   ca: {
     eyebrow: "OFERTES RECOMANADES",
@@ -50,6 +51,7 @@ const copy = {
     potentialMatchDesc: "Compleixes amb la base de l'oferta. Adapta el teu CV per destacar competències transferibles.",
     freeNote: "El pla PRO mostrarà el desglossament de requisits i les competències que falten.",
     proNote: "El desglossament detallat de requisits s'ha personalitzat a partir del teu perfil.",
+    loadingJobs: "Buscant ofertes compatibles...",
   },
   en: {
     eyebrow: "RECOMMENDED JOBS",
@@ -75,6 +77,7 @@ const copy = {
     potentialMatchDesc: "You match basic aspects. Tailor your profile to highlight relevant transferable skills.",
     freeNote: "The PRO plan will show requirement details and missing skills.",
     proNote: "The detailed requirements analysis has been personalized based on your profile.",
+    loadingJobs: "Searching for compatible jobs...",
   },
 };
 
@@ -190,7 +193,7 @@ function getRequirementSubtitle(text, matched) {
   }
 }
 
-export function JobMatches({ jobs = [], language, plan }) {
+export function JobMatches({ jobs = [], language, plan, loading = false }) {
   const t = copy[language];
   const [minimumScore, setMinimumScore] = useState(50);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -317,7 +320,27 @@ export function JobMatches({ jobs = [], language, plan }) {
         </label>
       </div>
 
-      {visibleJobs.length ? (
+      {loading ? (
+        <div className="job-matches__loading-container">
+          <div className="job-matches__skeleton-layout">
+            <div className="job-matches__skeleton-sidebar">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="job-skeleton-card">
+                  <div className="job-skeleton-badge"></div>
+                  <div className="job-skeleton-meta">
+                    <div className="job-skeleton-line job-skeleton-line--title"></div>
+                    <div className="job-skeleton-line job-skeleton-line--company"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="job-matches__skeleton-detail">
+              <div className="job-skeleton-pulse-spinner"></div>
+              <p className="job-skeleton-text">{t.loadingJobs}</p>
+            </div>
+          </div>
+        </div>
+      ) : visibleJobs.length ? (
         <div className="job-matches__glassdoor-layout">
           {/* Left panel: List of job previews */}
           <div className="job-matches__list-pane">

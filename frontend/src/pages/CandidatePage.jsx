@@ -508,7 +508,12 @@ export function CandidatePage() {
         )}
 
         {qaComplete && qaJobs && (
-          <JobMatches jobs={qaJobs} language={language} plan={plan} />
+          <JobMatches
+            jobs={qaJobs}
+            language={language}
+            plan={plan}
+            loading={loading}
+          />
         )}
 
         {result && (
@@ -558,16 +563,23 @@ export function CandidatePage() {
                 plan={plan}
                 onPlanChange={changePlan}
                 onSaveAnswers={async (answers) => {
-                  const updated = await completeProfile(
-                    result.matching_profile,
-                    answers,
-                    language,
-                    plan,
-                  );
-                  setResult((current) => ({
-                    ...current,
-                    ranked_jobs: updated.ranked_jobs,
-                  }));
+                  setLoading(true);
+                  try {
+                    const updated = await completeProfile(
+                      result.matching_profile,
+                      answers,
+                      language,
+                      plan,
+                    );
+                    setResult((current) => ({
+                      ...current,
+                      ranked_jobs: updated.ranked_jobs,
+                    }));
+                  } catch (error) {
+                    setMessage(error.message);
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
               />
             )}
@@ -581,6 +593,7 @@ export function CandidatePage() {
               jobs={result.ranked_jobs}
               language={language}
               plan={plan}
+              loading={loading}
             />
           </>
         )}
