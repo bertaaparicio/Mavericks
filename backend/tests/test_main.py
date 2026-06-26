@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
@@ -56,6 +57,24 @@ def test_ai_health_endpoint() -> None:
         "fallback_provider": "ollama",
         "api_key_configured": True,
     }
+
+
+def test_frontend_root_uses_repo_frontend_dist(tmp_path: Path) -> None:
+    import app.main as main_module
+
+    repo_root = tmp_path / "repo"
+    frontend_dist = repo_root / "frontend" / "dist"
+    frontend_dist.mkdir(parents=True)
+    module_file = repo_root / "backend" / "app" / "main.py"
+    module_file.parent.mkdir(parents=True, exist_ok=True)
+    module_file.touch()
+
+    original_file = main_module.__file__
+    main_module.__file__ = str(module_file)
+    try:
+        assert main_module._frontend_root() == frontend_dist
+    finally:
+        main_module.__file__ = original_file
 
 
 @patch("app.main._search_jobs", return_value=[])
