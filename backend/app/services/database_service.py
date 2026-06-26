@@ -91,14 +91,21 @@ class DatabaseConnection:
 
         where = " AND ".join(where_clauses)
 
+        order_by_clause = ""
+        if location:
+            order_by_clause = "ORDER BY (CASE WHEN location ILIKE %s THEN 0 ELSE 1 END), job_title"
+            loc_term = location.split(",")[0].strip()
+            values.append(f"%{loc_term}%")
+
         query = f"""
             SELECT job_title, company_name, location, seniority_level,
                    job_function, employment_type, industry
             FROM jobposts
             WHERE {where}
+            {order_by_clause}
             LIMIT %s
         """
-        values.append(limit * 3)
+        values.append(limit * 25)
 
         logger.debug("Executing query: %s with params: %s", query, values)
         with self._conn.cursor(cursor_factory=RealDictCursor) as cur:

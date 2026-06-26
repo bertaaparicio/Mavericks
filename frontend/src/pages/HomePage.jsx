@@ -198,12 +198,9 @@ const translations = {
         ],
       ],
     },
-    trustTitle: "Tecnología transparente y ética.",
-    trust: [
-      ["Privacidad Total", "Tus datos no se venden. Procesamiento seguro."],
-      ["IA Explicable", "Te decimos el porqué de cada recomendación."],
-      ["Sin Sesgos", "Algoritmos auditados para priorizar el mérito."],
-    ],
+    trustTitle: "Tecnología transparente y ética",
+    trustP1: "Creemos en la Claridad Ética. Cada puntuación de compatibilidad, brecha de habilidades o recomendación se explica y justifica por completo para construir una confianza profesional sólida. No nos escondemos detrás de algoritmos de caja negra: nuestro emparejamiento con IA es transparente, guiado por explicaciones claras y diseñado para ofrecer control total.",
+    trustP2: "Nuestra tecnología está diseñada desde cero para combatir los sesgos y priorizar la inclusión, garantizando que la evaluación se base estrictamente en el mérito, las habilidades y la experiencia real. Al ofrecer transparencia total y auditabilidad, facilitamos que las empresas contraten con confianza y que los candidatos entiendan exactamente dónde se encuentran.",
   },
   ca: {
     titleStart: "La trobada perfecta entre",
@@ -305,12 +302,9 @@ const translations = {
         ],
       ],
     },
-    trustTitle: "Tecnologia transparent i ètica.",
-    trust: [
-      ["Privacitat total", "Les teves dades no es venen. Processament segur."],
-      ["IA explicable", "T’expliquem el perquè de cada recomanació."],
-      ["Sense biaixos", "Algoritmes auditats per prioritzar el mèrit."],
-    ],
+    trustTitle: "Tecnologia transparent i ètica",
+    trustP1: "Creiem en la Claredat Ètica. Cada puntuació de compatibilitat, bretxa d'habilitats o recomanació s'explica i es justifica per complet per construir una confiança professional sòlida. No ens amaguem darrere d'algorismes de caixa negra: el nostre emparellament amb IA és transparent, guiat per explicacions clares i dissenyat per oferir control total.",
+    trustP2: "La nostra tecnologia està dissenyada des de zero per combatre els biaixos i prioritzar la inclusió, garantint que l'avaluació es basi estrictament en el mèrit, les habilitats i l'experiència real. En oferir transparència total i audibilitat, facilitem que les empreses contractin amb confiança i els candidats entenguin exactament on es troben.",
   },
   en: {
     titleStart: "The perfect meeting between",
@@ -411,12 +405,9 @@ const translations = {
         ],
       ],
     },
-    trustTitle: "Transparent and ethical technology.",
-    trust: [
-      ["Total privacy", "Your data is never sold. Secure processing."],
-      ["Explainable AI", "We explain the reason behind every recommendation."],
-      ["Without bias", "Audited algorithms prioritize merit."],
-    ],
+    trustTitle: "Transparent and ethical technology",
+    trustP1: "We believe in Ethical Clarity. Every match score, skill gap, or career recommendation is fully explained and justified to build strong professional trust. We don't hide behind black-box algorithms — our AI-powered matchmaking is transparent, explanation-driven, and designed to keep humans in control.",
+    trustP2: "Our technology is built from the ground up to fight bias and prioritize inclusion, ensuring candidate evaluation is based strictly on merit, talent, and real experience. By delivering full transparency and auditability, we empower recruiters to hire with confidence and candidates to understand exactly where they stand.",
   },
 };
 
@@ -570,19 +561,41 @@ export function HomePage() {
           </div>
         </section>
 
-        <section className="trust" id="confianza">
-          <div className="container">
-            <h2>{t.trustTitle}</h2>
-            <div className="trust__grid">
-              {t.trust.map(([title, text], index) => (
-                <article key={title}>
-                  <span className="trust__number" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </article>
-              ))}
+        <section className="vision-section" id="confianza">
+          <div className="container vision-container">
+            <div className="vision-grid">
+              
+              {/* Row 1, Column 1: Title */}
+              <div className="vision-title-col">
+                <h2 className="vision-title">{t.trustTitle}</h2>
+              </div>
+              
+              {/* Row 1, Column 2: Intro Columns */}
+              <div className="vision-intro-col">
+                <div className="vision-intro-grid">
+                  <div className="vision-intro-subcol">
+                    <p>{t.trustP1}</p>
+                  </div>
+                  <div className="vision-intro-subcol">
+                    <p>{t.trustP2}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 2, Column 1: Empty Space */}
+              <div className="vision-empty-col"></div>
+
+              {/* Row 2, Column 2: Office Image */}
+              <div className="vision-office-col">
+                <div className="vision-office-image-wrapper">
+                  <img 
+                    src="/images/office.avif" 
+                    alt="Office" 
+                    className="vision-office-image" 
+                  />
+                </div>
+              </div>
+
             </div>
           </div>
         </section>

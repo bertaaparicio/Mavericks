@@ -98,6 +98,39 @@ def test_cv_qa_init_no_file(mock_ollama: MagicMock, mock_search: MagicMock) -> N
 
 
 @patch("app.main._search_jobs", return_value=[])
+@patch("app.main.get_qa_service")
+def test_cv_qa_init_success(mock_get_qa: MagicMock, mock_search: MagicMock) -> None:
+    from unittest.mock import AsyncMock
+    from app.main import app
+    from app.services.qa_service import QASession
+
+    mock_session = QASession("dummy cv text")
+    mock_session.session_id = "test-session-123"
+    mock_session.current_question = "What is your desired role?"
+
+    mock_qa_service = MagicMock()
+    mock_qa_service.init_session = AsyncMock(return_value=mock_session)
+    mock_get_qa.return_value = mock_qa_service
+
+    test_client = TestClient(app)
+
+    pdf_bytes = b"%PDF-1.4\n..."
+
+    with patch("app.services.cv_reader.extract_text", return_value=("dummy cv text", {})):
+        response = test_client.post(
+            "/cv-qa/init",
+            files={"file": ("cv.pdf", pdf_bytes, "application/pdf")},
+            data={"language": "es"}
+        )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "session_id": "test-session-123",
+        "question": "What is your desired role?"
+    }
+
+
+@patch("app.main._search_jobs", return_value=[])
 @patch("app.main.AIModelClient")
 def test_cv_qa_answer_no_session(
     mock_ollama: MagicMock, mock_search: MagicMock

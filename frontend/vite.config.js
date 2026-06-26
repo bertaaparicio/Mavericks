@@ -8,6 +8,8 @@ export default defineConfig({
     proxy: {
       // Durante el desarrollo, Vite reenvía la API al backend Python.
       "/api": "http://127.0.0.1:8000",
+      "/cv-qa": "http://127.0.0.1:8000",
+      "/match-from-profile": "http://127.0.0.1:8000",
     },
   },
   build: {
