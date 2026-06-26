@@ -18,13 +18,18 @@ const copy = {
     insightsLabel: "Análisis y Optimización",
     aiAgentLabel: "AGENTE IA",
     highMatch: "Coincidencia de Alto Potencial",
-    highMatchDesc: "Tienes las competencias clave para este puesto, pero puedes optimizar al 100%.",
+    highMatchDesc:
+      "Tienes las competencias clave para este puesto, pero puedes optimizar al 100%.",
     goodMatch: "Buena Coincidencia",
-    goodMatchDesc: "Coincides en varios aspectos clave de la oferta. Puedes reforzar tu perfil.",
+    goodMatchDesc:
+      "Coincides en varios aspectos clave de la oferta. Puedes reforzar tu perfil.",
     potentialMatch: "Coincidencia Potencial",
-    potentialMatchDesc: "Cumples con la base de la oferta. Adapta tu CV para destacar competencias transferibles.",
-    freeNote: "El plan PRO mostrará el desglose de requisitos y las competencias que faltan.",
-    proNote: "El desglose detallado de requisitos se ha personalizado a partir de tu perfil.",
+    potentialMatchDesc:
+      "Cumples con la base de la oferta. Adapta tu CV para destacar competencias transferibles.",
+    freeNote:
+      "El plan PRO mostrará el desglose de requisitos y las competencias que faltan.",
+    proNote:
+      "El desglose detallado de requisitos se ha personalizado a partir de tu perfil.",
     loadingJobs: "Buscando ofertas compatibles...",
   },
   ca: {
@@ -44,13 +49,18 @@ const copy = {
     insightsLabel: "Anàlisi i Optimització",
     aiAgentLabel: "AGENT IA",
     highMatch: "Coincidència d'Alt Potencial",
-    highMatchDesc: "Tens les competències clau per a aquest lloc, però pots optimitzar al 100%.",
+    highMatchDesc:
+      "Tens les competències clau per a aquest lloc, però pots optimitzar al 100%.",
     goodMatch: "Bona Coincidència",
-    goodMatchDesc: "Coincideixes en diversos aspectes clau de l'oferta. Pots reforçar el teu perfil.",
+    goodMatchDesc:
+      "Coincideixes en diversos aspectes clau de l'oferta. Pots reforçar el teu perfil.",
     potentialMatch: "Coincidència Potencial",
-    potentialMatchDesc: "Compleixes amb la base de l'oferta. Adapta el teu CV per destacar competències transferibles.",
-    freeNote: "El pla PRO mostrarà el desglossament de requisits i les competències que falten.",
-    proNote: "El desglossament detallat de requisits s'ha personalitzat a partir del teu perfil.",
+    potentialMatchDesc:
+      "Compleixes amb la base de l'oferta. Adapta el teu CV per destacar competències transferibles.",
+    freeNote:
+      "El pla PRO mostrarà el desglossament de requisits i les competències que falten.",
+    proNote:
+      "El desglossament detallat de requisits s'ha personalitzat a partir del teu perfil.",
     loadingJobs: "Buscant ofertes compatibles...",
   },
   en: {
@@ -70,13 +80,17 @@ const copy = {
     insightsLabel: "Insights & Optimization",
     aiAgentLabel: "AI AGENT",
     highMatch: "High Potential Match",
-    highMatchDesc: "You have the core skills needed for this role but can optimize for 100%",
+    highMatchDesc:
+      "You have the core skills needed for this role but can optimize for 100%",
     goodMatch: "Good Potential Match",
-    goodMatchDesc: "You match several key areas for this role. Some technical skills can be refined.",
+    goodMatchDesc:
+      "You match several key areas for this role. Some technical skills can be refined.",
     potentialMatch: "Potential Match",
-    potentialMatchDesc: "You match basic aspects. Tailor your profile to highlight relevant transferable skills.",
+    potentialMatchDesc:
+      "You match basic aspects. Tailor your profile to highlight relevant transferable skills.",
     freeNote: "The PRO plan will show requirement details and missing skills.",
-    proNote: "The detailed requirements analysis has been personalized based on your profile.",
+    proNote:
+      "The detailed requirements analysis has been personalized based on your profile.",
     loadingJobs: "Searching for compatible jobs...",
   },
 };
@@ -90,7 +104,7 @@ function generateJobDetails(job) {
   const isFrontend = /frontend|front-end|ui|react|web/i.test(title);
   const isBackend = /backend|back-end|api|node|python|java|golang/i.test(title);
   const isData = /data|scientist|analyst|ml|ai|python/i.test(title);
-  
+
   // Salary estimation
   let salary = "$95k - $125k";
   if (isSenior) {
@@ -100,10 +114,14 @@ function generateJobDetails(job) {
   } else if (isBackend || isData) {
     salary = "$110k - $155k";
   }
-  
+
   // Date/Posted estimation
   let posted = job.date || "2 days ago";
-  if (!posted.toLowerCase().includes("ago") && !posted.toLowerCase().includes("posted") && !posted.toLowerCase().includes("day")) {
+  if (
+    !posted.toLowerCase().includes("ago") &&
+    !posted.toLowerCase().includes("posted") &&
+    !posted.toLowerCase().includes("day")
+  ) {
     posted = `Posted on ${posted}`;
   } else if (!posted.toLowerCase().includes("posted")) {
     posted = `Posted ${posted}`;
@@ -125,7 +143,7 @@ function generateJobDetails(job) {
     "Experience with relational databases and SQL",
     "Understanding of software engineering best practices",
     "Strong communication and collaborative skills",
-    "Familiarity with cloud platforms (AWS, Azure, or GCP)"
+    "Familiarity with cloud platforms (AWS, Azure, or GCP)",
   ];
 
   if (isFrontend) {
@@ -134,7 +152,7 @@ function generateJobDetails(job) {
       "TypeScript expertise",
       "System Design for Web applications",
       "Next.js & Server Components",
-      "Testing (Jest, Cypress)"
+      "Testing (Jest, Cypress)",
     ];
   } else if (isBackend) {
     requirements = [
@@ -142,7 +160,7 @@ function generateJobDetails(job) {
       "Database systems & query optimization (PostgreSQL/Redis)",
       "Microservices architecture & Docker",
       "Cloud platform services (AWS/GCP)",
-      "Security best practices & OAuth"
+      "Security best practices & OAuth",
     ];
   } else if (isData) {
     requirements = [
@@ -150,7 +168,7 @@ function generateJobDetails(job) {
       "Data pipeline engineering (Airflow/dbt)",
       "Data warehouses (Snowflake/BigQuery)",
       "Machine learning model design",
-      "Analytics & visualization dashboards"
+      "Analytics & visualization dashboards",
     ];
   }
 
@@ -160,13 +178,22 @@ function generateJobDetails(job) {
 function getRequirementSubtitle(text, matched) {
   const norm = text.toLowerCase();
   if (matched) {
-    if (norm.includes("react") || norm.includes("angular") || norm.includes("vue") || norm.includes("frontend")) {
+    if (
+      norm.includes("react") ||
+      norm.includes("angular") ||
+      norm.includes("vue") ||
+      norm.includes("frontend")
+    ) {
       return "Your CV shows years of experience at previous roles.";
     }
     if (norm.includes("typescript") || norm.includes("javascript")) {
       return "Demonstrated through project descriptions.";
     }
-    if (norm.includes("next.js") || norm.includes("server") || norm.includes("framework")) {
+    if (
+      norm.includes("next.js") ||
+      norm.includes("server") ||
+      norm.includes("framework")
+    ) {
       return "Matched with 'Modern Frameworks' section.";
     }
     if (norm.includes("graphql") || norm.includes("apollo")) {
@@ -175,7 +202,11 @@ function getRequirementSubtitle(text, matched) {
     if (norm.includes("accessibility") || norm.includes("a11y")) {
       return "Matched with 'Inclusive Design' keyword.";
     }
-    if (norm.includes("motion") || norm.includes("animation") || norm.includes("framer")) {
+    if (
+      norm.includes("motion") ||
+      norm.includes("animation") ||
+      norm.includes("framer")
+    ) {
       return "Matched via your portfolio link.";
     }
     return "Matched with skills and descriptions in your CV.";
@@ -183,7 +214,12 @@ function getRequirementSubtitle(text, matched) {
     if (norm.includes("design") || norm.includes("architecture")) {
       return "Missing specific architectural keywords.";
     }
-    if (norm.includes("testing") || norm.includes("jest") || norm.includes("cypress") || norm.includes("unit")) {
+    if (
+      norm.includes("testing") ||
+      norm.includes("jest") ||
+      norm.includes("cypress") ||
+      norm.includes("unit")
+    ) {
       return "Not mentioned in your recent projects.";
     }
     if (norm.includes("web3") || norm.includes("blockchain")) {
@@ -217,17 +253,33 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
     let strengths = activeJob.match_explanation?.strengths || [];
     let missing = activeJob.match_explanation?.missing || [];
 
-    const isFrontend = /frontend|front-end|react|web|ui/i.test(activeJob.job_title);
-    const isBackend = /backend|api|node|python|java|golang/i.test(activeJob.job_title);
+    const isFrontend = /frontend|front-end|react|web|ui/i.test(
+      activeJob.job_title,
+    );
+    const isBackend = /backend|api|node|python|java|golang/i.test(
+      activeJob.job_title,
+    );
 
     // Fallbacks if strengths are empty (e.g. if storyteller model fails or in free plan initial states)
     if (strengths.length === 0) {
       if (isFrontend) {
-        strengths = ["React.js (5+ years experience)", "TypeScript expertise", "Next.js & Server Components"];
+        strengths = [
+          "React.js (5+ years experience)",
+          "TypeScript expertise",
+          "Next.js & Server Components",
+        ];
       } else if (isBackend) {
-        strengths = ["Backend API development (Node.js/Go/Python)", "Database systems & query optimization (PostgreSQL/Redis)", "Microservices architecture & Docker"];
+        strengths = [
+          "Backend API development (Node.js/Go/Python)",
+          "Database systems & query optimization (PostgreSQL/Redis)",
+          "Microservices architecture & Docker",
+        ];
       } else {
-        strengths = ["Agile/Scrum certification", "CI/CD pipeline configuration", "Technical documentation writing"];
+        strengths = [
+          "Agile/Scrum certification",
+          "CI/CD pipeline configuration",
+          "Technical documentation writing",
+        ];
       }
     }
 
@@ -235,7 +287,10 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
       if (isFrontend) {
         missing = ["System Design for Web", "Testing (Jest, Cypress)"];
       } else if (isBackend) {
-        missing = ["Cloud platform services (AWS/GCP)", "Security best practices & OAuth"];
+        missing = [
+          "Cloud platform services (AWS/GCP)",
+          "Security best practices & OAuth",
+        ];
       } else {
         missing = ["Docker / Containerization"];
       }
@@ -245,8 +300,8 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
     const mustHaveStrengths = strengths.slice(0, 3);
     const mustHaveMissing = missing.slice(0, 2);
     const mustHaves = [
-      ...mustHaveStrengths.map(s => ({ text: s, matched: true })),
-      ...mustHaveMissing.map(m => ({ text: m, matched: false }))
+      ...mustHaveStrengths.map((s) => ({ text: s, matched: true })),
+      ...mustHaveMissing.map((m) => ({ text: m, matched: false })),
     ];
 
     // Nice-to-Haves: remaining strengths & missing
@@ -256,28 +311,48 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
     // Dynamic premium Fallbacks to enrich nice-to-haves
     if (niceHaveStrengths.length === 0 && niceHaveMissing.length === 0) {
       if (isFrontend) {
-        niceHaveStrengths = ["GraphQL & Apollo Client", "Web Accessibility (A11y)", "Framer Motion animations"];
+        niceHaveStrengths = [
+          "GraphQL & Apollo Client",
+          "Web Accessibility (A11y)",
+          "Framer Motion animations",
+        ];
         niceHaveMissing = ["Web3/Blockchain experience"];
       } else if (isBackend) {
-        niceHaveStrengths = ["GraphQL APIs (Apollo Server)", "gRPC & Protocol Buffers", "Redis Caching"];
+        niceHaveStrengths = [
+          "GraphQL APIs (Apollo Server)",
+          "gRPC & Protocol Buffers",
+          "Redis Caching",
+        ];
         niceHaveMissing = ["NoSQL database tuning (MongoDB)"];
       } else {
-        niceHaveStrengths = ["Agile/Scrum certification", "CI/CD pipeline configuration", "Technical documentation writing"];
+        niceHaveStrengths = [
+          "Agile/Scrum certification",
+          "CI/CD pipeline configuration",
+          "Technical documentation writing",
+        ];
         niceHaveMissing = ["Docker / Containerization"];
       }
     }
 
     const niceToHaves = [
-      ...niceHaveStrengths.map(s => ({ text: s, matched: true })),
-      ...niceHaveMissing.map(m => ({ text: m, matched: false }))
+      ...niceHaveStrengths.map((s) => ({ text: s, matched: true })),
+      ...niceHaveMissing.map((m) => ({ text: m, matched: false })),
     ];
 
     // Filter based on plan (free plan does not display missing requirements / red crosses)
-    const finalMustHaves = mustHaves.filter(item => plan === "pro" || item.matched);
-    const finalNiceToHaves = niceToHaves.filter(item => plan === "pro" || item.matched);
+    const finalMustHaves = mustHaves.filter(
+      (item) => plan === "pro" || item.matched,
+    );
+    const finalNiceToHaves = niceToHaves.filter(
+      (item) => plan === "pro" || item.matched,
+    );
 
-    const mustHaveMatched = finalMustHaves.filter(item => item.matched).length;
-    const niceToHaveMatched = finalNiceToHaves.filter(item => item.matched).length;
+    const mustHaveMatched = finalMustHaves.filter(
+      (item) => item.matched,
+    ).length;
+    const niceToHaveMatched = finalNiceToHaves.filter(
+      (item) => item.matched,
+    ).length;
 
     return {
       mustHaves: finalMustHaves,
@@ -285,16 +360,22 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
       mustHaveMatched,
       mustHaveTotal: finalMustHaves.length,
       niceToHaveMatched,
-      niceToHaveTotal: finalNiceToHaves.length
+      niceToHaveTotal: finalNiceToHaves.length,
     };
   }, [activeJob, plan]);
 
   // Match score text and status mapping
   const matchScore = activeJob ? Math.round(activeJob.match_ratio || 0) : 0;
   const matchStatus = useMemo(() => {
-    if (matchScore >= 80) return { title: t.highMatch, desc: t.highMatchDesc, class: "high" };
-    if (matchScore >= 60) return { title: t.goodMatch, desc: t.goodMatchDesc, class: "good" };
-    return { title: t.potentialMatch, desc: t.potentialMatchDesc, class: "potential" };
+    if (matchScore >= 80)
+      return { title: t.highMatch, desc: t.highMatchDesc, class: "high" };
+    if (matchScore >= 60)
+      return { title: t.goodMatch, desc: t.goodMatchDesc, class: "good" };
+    return {
+      title: t.potentialMatch,
+      desc: t.potentialMatchDesc,
+      class: "potential",
+    };
   }, [matchScore, t]);
 
   return (
@@ -305,7 +386,9 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
           <h2>{t.title}</h2>
         </div>
         <label className="match-filter">
-          <span>{t.minimum}: <strong>{minimumScore}%</strong></span>
+          <span>
+            {t.minimum}: <strong>{minimumScore}%</strong>
+          </span>
           <input
             type="range"
             min="0"
@@ -358,7 +441,9 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     </div>
                     <div className="job-item-card__meta">
                       <h4>{job.job_title}</h4>
-                      <span className="job-item-card__company">{job.company_name || "—"}</span>
+                      <span className="job-item-card__company">
+                        {job.company_name || "—"}
+                      </span>
                     </div>
                   </div>
                   <div className="job-item-card__details-row">
@@ -375,15 +460,16 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
             <div className="job-matches__details-pane">
               {/* Back & Actions header */}
               <div className="job-details-top-bar">
-                <button className="back-link" onClick={() => setSelectedIndex(0)}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                  <span>{t.backToOffers}</span>
-                </button>
                 <div className="job-details-actions">
                   <button className="action-icon-btn" title="Share">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <circle cx="18" cy="5" r="3" />
                       <circle cx="6" cy="12" r="3" />
                       <circle cx="18" cy="19" r="3" />
@@ -392,7 +478,14 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     </svg>
                   </button>
                   <button className="action-icon-btn" title="Save">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
                     </svg>
                   </button>
@@ -403,7 +496,14 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     rel="noreferrer"
                   >
                     <span>{t.applyNow}</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <line x1="7" y1="17" x2="17" y2="7" />
                       <polyline points="7 7 17 7 17 17" />
                     </svg>
@@ -419,9 +519,13 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     <div className="job-details-title-row">
                       <div>
                         <h2>{activeJob.job_title}</h2>
-                        <span className="job-details-company-name">{activeJob.company_name}</span>
+                        <span className="job-details-company-name">
+                          {activeJob.company_name}
+                        </span>
                       </div>
-                      <span className="job-details-posted-date">{jobDetails.posted}</span>
+                      <span className="job-details-posted-date">
+                        {jobDetails.posted}
+                      </span>
                     </div>
 
                     {/* Metadata 4-card horizontal grid */}
@@ -429,7 +533,15 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                       <div className="meta-metric-card">
                         <small>{t.locationLabel}</small>
                         <div className="meta-metric-content">
-                          <svg className="metric-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg
+                            className="metric-icon"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                             <circle cx="12" cy="10" r="3" />
                           </svg>
@@ -440,7 +552,15 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                       <div className="meta-metric-card">
                         <small>{t.salaryLabel}</small>
                         <div className="meta-metric-content">
-                          <svg className="metric-icon metric-icon--blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg
+                            className="metric-icon metric-icon--blue"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <line x1="12" y1="1" x2="12" y2="23" />
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                           </svg>
@@ -451,11 +571,28 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                       <div className="meta-metric-card">
                         <small>{t.typeLabel}</small>
                         <div className="meta-metric-content">
-                          <svg className="metric-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                          <svg
+                            className="metric-icon"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <rect
+                              x="2"
+                              y="7"
+                              width="20"
+                              height="14"
+                              rx="2"
+                              ry="2"
+                            />
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                           </svg>
-                          <span>{activeJob.employment_type || "Full-time"}</span>
+                          <span>
+                            {activeJob.employment_type || "Full-time"}
+                          </span>
                         </div>
                       </div>
 
@@ -471,7 +608,9 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     {/* Job Description section */}
                     <div className="job-desc-section">
                       <h3 className="section-title-bar">Job Description</h3>
-                      <p className="section-body-text">{jobDetails.description}</p>
+                      <p className="section-body-text">
+                        {jobDetails.description}
+                      </p>
                     </div>
 
                     {/* Role Requirements section */}
@@ -491,7 +630,10 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                   <div className="job-details-card job-details-card--analysis">
                     {/* Progress Circle & Tagline */}
                     <div className="match-wheel-wrapper">
-                      <div className="match-ring" style={{ "--score-percentage": `${matchScore}%` }}>
+                      <div
+                        className="match-ring"
+                        style={{ "--score-percentage": `${matchScore}%` }}
+                      >
                         <span className="match-ring-score">{matchScore}%</span>
                       </div>
                     </div>
@@ -505,18 +647,37 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     <div className="analysis-box">
                       <div className="analysis-box-header">
                         <h4>{t.mustHaveLabel}</h4>
-                        <span className="analysis-pill">{matchAnalysis.mustHaveMatched}/{matchAnalysis.mustHaveTotal} {t.matchedOf}</span>
+                        <span className="analysis-pill">
+                          {matchAnalysis.mustHaveMatched}/
+                          {matchAnalysis.mustHaveTotal} {t.matchedOf}
+                        </span>
                       </div>
                       <div className="analysis-items">
                         {matchAnalysis.mustHaves.map((item, i) => (
                           <div className="analysis-item-row" key={i}>
-                            <div className={`analysis-icon-badge ${item.matched ? "matched" : "missing"}`}>
+                            <div
+                              className={`analysis-icon-badge ${item.matched ? "matched" : "missing"}`}
+                            >
                               {item.matched ? (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3"
+                                >
                                   <polyline points="20 6 9 17 4 12" />
                                 </svg>
                               ) : (
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <svg
+                                  width="10"
+                                  height="10"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3"
+                                >
                                   <line x1="18" y1="6" x2="6" y2="18" />
                                   <line x1="6" y1="6" x2="18" y2="18" />
                                 </svg>
@@ -524,7 +685,12 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                             </div>
                             <div className="analysis-item-content">
                               <strong>{item.text}</strong>
-                              <p>{getRequirementSubtitle(item.text, item.matched)}</p>
+                              <p>
+                                {getRequirementSubtitle(
+                                  item.text,
+                                  item.matched,
+                                )}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -535,18 +701,37 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                     <div className="analysis-box">
                       <div className="analysis-box-header">
                         <h4>{t.niceToHaveLabel}</h4>
-                        <span className="analysis-pill analysis-pill--green">{matchAnalysis.niceToHaveMatched}/{matchAnalysis.niceToHaveTotal} {t.matchedOf}</span>
+                        <span className="analysis-pill analysis-pill--green">
+                          {matchAnalysis.niceToHaveMatched}/
+                          {matchAnalysis.niceToHaveTotal} {t.matchedOf}
+                        </span>
                       </div>
                       <div className="analysis-items">
                         {matchAnalysis.niceToHaves.map((item, i) => (
                           <div className="analysis-item-row" key={i}>
-                            <div className={`analysis-icon-badge ${item.matched ? "matched" : "missing"}`}>
+                            <div
+                              className={`analysis-icon-badge ${item.matched ? "matched" : "missing"}`}
+                            >
                               {item.matched ? (
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3"
+                                >
                                   <polyline points="20 6 9 17 4 12" />
                                 </svg>
                               ) : (
-                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <svg
+                                  width="10"
+                                  height="10"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3"
+                                >
                                   <line x1="18" y1="6" x2="6" y2="18" />
                                   <line x1="6" y1="6" x2="18" y2="18" />
                                 </svg>
@@ -554,7 +739,12 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                             </div>
                             <div className="analysis-item-content">
                               <strong>{item.text}</strong>
-                              <p>{getRequirementSubtitle(item.text, item.matched)}</p>
+                              <p>
+                                {getRequirementSubtitle(
+                                  item.text,
+                                  item.matched,
+                                )}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -569,19 +759,35 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
                 <div className="job-insights-banner">
                   <div className="insights-banner-main">
                     <div className="insights-heading-area">
-                      <svg className="sparkles-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        className="sparkles-icon"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
                       </svg>
                       <strong>{t.insightsLabel}</strong>
                     </div>
-                    <p className="insights-body-text">{activeJob.match_explanation.final_tip}</p>
+                    <p className="insights-body-text">
+                      {activeJob.match_explanation.final_tip}
+                    </p>
                   </div>
                   <span className="insights-agent-tag">{t.aiAgentLabel}</span>
                 </div>
               )}
             </div>
           ) : (
-            <div style={{ padding: "40px", textAlign: "center", color: "var(--muted)" }}>
+            <div
+              style={{
+                padding: "40px",
+                textAlign: "center",
+                color: "var(--muted)",
+              }}
+            >
               {t.empty}
             </div>
           )}
@@ -590,7 +796,9 @@ export function JobMatches({ jobs = [], language, plan, loading = false }) {
         <p className="job-matches__empty">{t.empty}</p>
       )}
 
-      <p className="job-matches__note">{plan === "pro" ? t.proNote : t.freeNote}</p>
+      <p className="job-matches__note">
+        {plan === "pro" ? t.proNote : t.freeNote}
+      </p>
     </section>
   );
 }
